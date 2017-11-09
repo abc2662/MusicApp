@@ -79,7 +79,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 }
 
                 if (mediaPlayer.isPlaying()){
-                    mediaPlayer.stop();;
+                    mediaPlayer.stop();
                     mediaPlayer.release();
                 }
 
@@ -149,7 +149,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                         }
 
                         if (mediaPlayer.isPlaying()){
-                            mediaPlayer.stop();;
+                            mediaPlayer.stop();
                             mediaPlayer.release();
                         }
 
