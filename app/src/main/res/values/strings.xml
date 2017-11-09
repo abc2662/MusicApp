@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">MusicApp</string>
+    <string name="app_name">MyMusicApp</string>
+    <string name="song_name">My Song</string>
+    <string name="artist_name">Artist</string>
+    <string name="fontFamily">serif</string>
+    <string name="text_Clock">00:00</string>
 </resources>
