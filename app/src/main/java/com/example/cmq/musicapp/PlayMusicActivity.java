@@ -17,6 +17,11 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -25,11 +30,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.DriveClient;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.android.gms.drive.DriveResource;
+import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.tasks.Task;
-
+import com.google.android.gms.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+//import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.Drive.Builder;
+import com.google.android.gms.common.AccountPicker;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PlayMusicActivity extends AppCompatActivity {
 
@@ -189,26 +206,26 @@ public class PlayMusicActivity extends AppCompatActivity {
         //--------------------------------------------------//
         //Loop Button Event
 
-        btnLoop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = "https://khoapham.vn/download/vietnamoi.mp3";
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                try {
-                    mediaPlayer.setDataSource(url);
-                    mediaPlayer.prepareAsync();
-                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mp.start();
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        btnLoop.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String url = "https://khoapham.vn/download/vietnamoi.mp3";
+//                MediaPlayer mediaPlayer = new MediaPlayer();
+//                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                try {
+//                    mediaPlayer.setDataSource(url);
+//                    mediaPlayer.prepareAsync();
+//                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                        @Override
+//                        public void onPrepared(MediaPlayer mp) {
+//                            mp.start();
+//                        }
+//                    });
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
     }
     private void signIn() {
@@ -233,6 +250,16 @@ public class PlayMusicActivity extends AppCompatActivity {
 
             // Signed in successfully, show authenticated UI.
             //updateUI(account);
+//             Build a drive client.
+           DriveClient mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
+            // Build a drive resource client.
+           DriveResourceClient mDriveResourceClient =
+                    Drive.getDriveResourceClient(getApplicationContext(), account);
+            GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(DriveScopes.DRIVE));
+            credential.setSelectedAccountName(account.getDisplayName());
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+            com.google.api.services.drive.Drive mService = null;
+             mService = new com.google.api.services.drive.Drive.Builder(AndroidHttp.newCompatibleTransport(),  jsonFactory, credential).build();
 
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
