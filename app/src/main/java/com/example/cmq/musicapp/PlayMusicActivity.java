@@ -2,6 +2,7 @@ package com.example.cmq.musicapp;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -33,8 +35,12 @@ public class PlayMusicActivity extends AppCompatActivity {
 
     TextView txtTitle, txtTimeProcess, txtTimeTotal;
     SeekBar sbProcess;
-    ImageButton btnPrev, btnPlay, btnNext, btnStop;
+    ImageButton btnPrev, btnPlay, btnNext, btnStop, btnRandom, btnLoop;
     ImageView imgDics;
+
+    com.google.android.gms.common.SignInButton btnSignIn;
+    GoogleSignInOptions gso;
+    GoogleSignInClient mGoogleSignInClient;
 
     ArrayList<Song> arraySong;
     int indexSong=0;
@@ -52,24 +58,36 @@ public class PlayMusicActivity extends AppCompatActivity {
 
         createMediaPlayer();
         anim_dics = AnimationUtils.loadAnimation(this, R.anim.dics_rotate);
+
+        //--------------------------------------------------//
         //RIGHT HERE
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        final GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button_gg);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        // Sign In Button Event
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.sign_in_button:
-                        signIn(mGoogleSignInClient);
-                        break;
-                }
+                signIn();
             }
         });
+//        signInButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                switch (v.getId()) {
+//                    case R.id.sign_in_button_gg:
+//                        signIn();
+//                        break;
+//                }
+//            }
+//        });
+
+
+        //--------------------------------------------------//
         //Play Pause Button Event
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +104,8 @@ public class PlayMusicActivity extends AppCompatActivity {
             }
         });
 
+
+        //--------------------------------------------------//
         //Stop Button Event
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +118,9 @@ public class PlayMusicActivity extends AppCompatActivity {
             }
         });
 
+
+
+        //--------------------------------------------------//
         //Next Button Event
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +142,8 @@ public class PlayMusicActivity extends AppCompatActivity {
             }
         });
 
+
+        //--------------------------------------------------//
         //Previous Button Event
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +165,8 @@ public class PlayMusicActivity extends AppCompatActivity {
             }
         });
 
+
+        //--------------------------------------------------//
         //SeekBar Process Event
         sbProcess.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -157,9 +184,35 @@ public class PlayMusicActivity extends AppCompatActivity {
                 mediaPlayer.seekTo(sbProcess.getProgress());
             }
         });
+
+
+        //--------------------------------------------------//
+        //Loop Button Event
+
+        btnLoop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://khoapham.vn/download/vietnamoi.mp3";
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                try {
+                    mediaPlayer.setDataSource(url);
+                    mediaPlayer.prepareAsync();
+                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            mp.start();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
-    private void signIn(GoogleSignInClient mGoogleSignInClient) {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();;
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     @Override
@@ -180,6 +233,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 
             // Signed in successfully, show authenticated UI.
             //updateUI(account);
+
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -259,8 +313,12 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnPlay = (ImageButton) findViewById(R.id.btn_play);
         btnStop = (ImageButton) findViewById(R.id.btn_stop);
         btnNext = (ImageButton) findViewById(R.id.btn_next);
+        btnRandom = (ImageButton) findViewById(R.id.btn_random);
+        btnLoop = (ImageButton) findViewById(R.id.btn_loop);
 
         imgDics = (ImageView) findViewById(R.id.img_Dics);
+
+        btnSignIn= (SignInButton) findViewById(R.id.sign_in_button_gg);
 
     }
 }

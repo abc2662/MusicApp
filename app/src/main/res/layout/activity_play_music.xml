@@ -7,14 +7,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.cmq.musicapp.PlayMusicActivity">
     <!--Header: Title, Timer, Option-->
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/sb_Process"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/sb_Process"
-        />
     <TextView
         android:id="@+id/txt_TitleSong"
         android:layout_width="match_parent"
@@ -25,17 +17,26 @@
         android:textColor="@color/colorText"
         android:textSize="24sp"
         tools:ignore="UnusedAttribute" />
+
     <!--List Song: List of songs-->
     <ImageView
         android:id="@+id/img_Dics"
         android:layout_width="300sp"
         android:layout_height="300sp"
-        android:layout_above="@+id/layout_Time"
         android:layout_below="@+id/txt_TitleSong"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/cd_512"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        android:src="@drawable/cd_512" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button_gg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/img_Dics"
+        android:layout_above="@+id/layout_Time"
+        tools:ignore="UnknownId" />
 
     <!--Media Controller: Processing bar, Time of song, Button control-->
     <RelativeLayout
@@ -85,6 +86,16 @@
         tools:ignore="UnknownId">
 
         <ImageButton
+            android:id="@+id/btn_random"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/random_48"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
             android:id="@+id/btn_prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,6 +133,16 @@
             android:layout_weight="1"
             android:background="@null"
             android:src="@drawable/next_48"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/btn_loop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/loop_48"
             tools:ignore="ContentDescription" />
     </LinearLayout>
 </RelativeLayout>
