@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,30 +16,19 @@
         android:fontFamily="@string/fontFamily"
         android:padding="5sp"
         android:text="@string/song_name"
-        android:textColor="@color/colorText"
         android:textSize="24sp"
         tools:ignore="UnusedAttribute" />
 
     <!--List Song: List of songs-->
+
     <ImageView
         android:id="@+id/img_Dics"
         android:layout_width="300sp"
         android:layout_height="300sp"
         android:layout_below="@+id/txt_TitleSong"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:contentDescription="@null"
         android:src="@drawable/cd_512" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button_gg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/img_Dics"
-        android:layout_above="@+id/layout_Time"
-        tools:ignore="UnknownId" />
-
     <!--Media Controller: Processing bar, Time of song, Button control-->
     <RelativeLayout
         android:id="@+id/layout_Time"
@@ -96,7 +84,8 @@
             android:layout_weight="1"
             android:background="@null"
             android:src="@drawable/random_48"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            />
 
         <ImageButton
             android:id="@+id/btn_prev"

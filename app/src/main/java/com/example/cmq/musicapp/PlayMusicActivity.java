@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.Image;
+import android.media.MediaDataSource;
 import android.media.MediaPlayer;
 import android.nfc.Tag;
 import android.os.Handler;
@@ -19,8 +20,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,20 +49,16 @@ import com.google.android.gms.drive.query.SearchableField;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+
 import com.google.android.gms.drive.DriveResource;
 import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.drive.Drive;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.api.services.drive.DriveScopes;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+
 //import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.Drive.Builder;
+
 import com.google.android.gms.common.AccountPicker;
-import com.google.api.services.drive.model.File;
+
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -72,24 +71,44 @@ public class PlayMusicActivity extends AppCompatActivity {
     SeekBar sbProcess;
     ImageButton btnPrev, btnPlay, btnNext, btnStop, btnRandom, btnLoop;
     ImageView imgDics;
-
-    com.google.android.gms.common.SignInButton btnSignIn;
-    GoogleSignInOptions gso;
-    GoogleSignInClient mGoogleSignInClient;
-    GoogleSignInAccount mAccountData;
     ArrayList<Song> arraySong;
     int indexSong=0;
     MediaPlayer mediaPlayer;
-
+    String musicLink;
     Animation anim_dics;
     private static int RC_SIGN_IN = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String TAG =  "SIGN IN: ";
-        Log.i(TAG, "Sign in success");
+        String TAG =  "onCreate: ";
+        Log.i(TAG, "Current onCreate");
         setContentView(R.layout.activity_play_music);
+        Intent musiclinkIntent = getIntent();
+        int activityrequest = musiclinkIntent.getIntExtra(getString(R.string.streamMusicrequest),1);
+        musicLink = musiclinkIntent.getStringExtra(getString(R.string.musiclinkdata));
+        if(activityrequest == 1)
+        {
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            try {
 
+                mediaPlayer.setDataSource(musicLink);
+                mediaPlayer.prepareAsync();
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        mp.start();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(activityrequest == 0)
+        {
+
+        }
         InitComp();
         AddSongs();
 
@@ -97,42 +116,6 @@ public class PlayMusicActivity extends AppCompatActivity {
         anim_dics = AnimationUtils.loadAnimation(this, R.anim.dics_rotate);
 
         //--------------------------------------------------//
-        //RIGHT HERE
-        String serverClientId = getString(R.string.sever_client_id);
-        //gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestScopes(Drive.SCOPE_FILE).build();
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
-                .requestServerAuthCode(serverClientId)
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button_gg);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-
-        // Sign In Button Event
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-                //Intent Login = buildGoogleSignInClient().getSignInIntent();
-                //startActivityForResult(Login, RC_SIGN_IN);;
-            }
-        });
-//        signInButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switch (v.getId()) {
-//                    case R.id.sign_in_button_gg:
-//                        signIn();
-//                        break;
-//                }
-//            }
-//        });
-
-
-        //--------------------------------------------------//
-        //Play Pause Button Event
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,148 +216,34 @@ public class PlayMusicActivity extends AppCompatActivity {
         //--------------------------------------------------//
         //Loop Button Event
 
-//        btnLoop.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String url = "https://khoapham.vn/download/vietnamoi.mp3";
-//                MediaPlayer mediaPlayer = new MediaPlayer();
-//                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//                try {
-//                    mediaPlayer.setDataSource(url);
-//                    mediaPlayer.prepareAsync();
-//                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                        @Override
-//                        public void onPrepared(MediaPlayer mp) {
-//                            mp.start();
-//                        }
-//                    });
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
+        btnLoop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = musicLink;
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                try {
 
-    }
-//    private GoogleSignInClient buildGoogleSignInClient() {
-//        GoogleSignInOptions signInOptions =
-//                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                        .requestScopes(Drive.SCOPE_FILE)
-//                        .build();
-//        return GoogleSignIn.getClient(this, signInOptions);
-//    }
-    private void signIn() {
-        final Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-//        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(signInIntent);
-//        updateViewWithGoogleSignInAccountTask(task);
-    }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            String TAG = "OnActivity ";
-            Log.i(TAG, "Result");
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                String authCode = account.getServerAuthCode();
-
-                // Show signed-un UI
-                //updateUI(account);
-                // TODO: send code to server and exchange for access/refresh/ID tokens
-            } catch (ApiException e) {
-                Log.w(TAG, "Sign-in failed", e);
-                //updateUI(null);
+                    mediaPlayer.setDataSource(url);
+                    mediaPlayer.prepareAsync();
+                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            mp.start();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            //handleSignInResult(task);
-        }
-    }
-    //Ham bi sai nhung dung bo
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            String idToken = account.getIdToken();
-            //updateUI(account);
-            // Signed in successfully, show authenticated UI.
-            //updateUI(account);
-//             Build a drive client.
-//           DriveClient mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
-//            // Build a drive resource client.
-//           DriveResourceClient mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), account);
-//            GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(DriveScopes.DRIVE));
-//            credential.setSelectedAccountName(account.getDisplayName());
-//            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-//            com.google.api.services.drive.Drive mService = null;
-//            mService = new com.google.api.services.drive.Drive.Builder(AndroidHttp.newCompatibleTransport(),  jsonFactory, credential).build();
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            //Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            //updateUI(null);
-        }
+        });
 
     }
-    private void updateViewWithGoogleSignInAccountTask(Task<GoogleSignInAccount> task) {
-        String TAG = "UPDATEVIEW";
-        Log.i(TAG, "Update view with sign in account task");
-        task.addOnSuccessListener(
-                new OnSuccessListener<GoogleSignInAccount>() {
-                    @Override
-                    public void onSuccess(GoogleSignInAccount googleSignInAccount) {
-                        String TAG =  "SIGN IN: ";
-                        Log.i(TAG, "Sign in success");
-                        // Build a drive client.
-                        DriveClient mDriveClient = Drive.getDriveClient(getApplicationContext(), googleSignInAccount);
-                        // Build a drive resource client.
-                        final DriveResourceClient mDriveResourceClient =
-                                Drive.getDriveResourceClient(getApplicationContext(), googleSignInAccount);
-                        Query query = new Query.Builder()
-                                .addFilter(Filters.eq(SearchableField.TITLE, "Faded.mp3"))
-                                .build();
-                        Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
-                        queryTask
-                                .addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
-                                            @Override
-                                            public void onSuccess(MetadataBuffer metadataBuffer) {
-                                                // Handle results...
-                                                Metadata metadata = metadataBuffer.get(0);
-                                                String FileID = metadata.getOriginalFilename();
-                                                txtTitle.setText(FileID);
-                                            }
-                                        })
-                                .addOnFailureListener( new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // Handle failure...
-                                    }
-                                });
 
-//                        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Collections.singleton(DriveScopes.DRIVE));
-//                        credential.setSelectedAccountName(credential.getSelectedAccountName());
-//                        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-//                        com.google.api.services.drive.Drive mService = null;
-//                        mService = new com.google.api.services.drive.Drive.Builder(AndroidHttp.newCompatibleTransport(),  jsonFactory, credential).build();
-                    }
-                })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                String TAG = "SIGG IN: ";
-                                Log.w(TAG, "Sign in failed", e);
-                            }
-                        });
-    }
-    @Override
     protected void onStart()
     {
         super.onStart();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        //updateUI(account);
 
     }
     private void updateTime(){
@@ -446,7 +315,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 
         imgDics = (ImageView) findViewById(R.id.img_Dics);
 
-        btnSignIn= (SignInButton) findViewById(R.id.sign_in_button_gg);
+        //btnSignIn= (SignInButton) findViewById(R.id.sign_in_button_gg);
 
     }
 }

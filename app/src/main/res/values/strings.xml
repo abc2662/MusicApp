@@ -4,8 +4,10 @@
     <string name="artist_name">Artist</string>
     <string name="fontFamily">serif</string>
     <string name="text_Clock">00:00</string>
-    <string name="sever_client_id">1073731369165-t3m6fu46u4o6tcin8lo0e4m2iqsautis.apps.googleusercontent.com</string>
+    <string name="sever_client_id">666582323887-tti3b01halai5q02i743jc4o5lbtlobj.apps.googleusercontent.com</string>
     <string name="title_activity_pick">PickActivity</string>
+    <string name="musiclinkdata">musicLinkExtra</string>
+    <string name="streamMusicrequest">streamMusicrequest</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
