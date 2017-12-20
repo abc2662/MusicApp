@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.media.Image;
 import android.media.MediaDataSource;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -87,18 +88,22 @@ public class PlayMusicActivity extends AppCompatActivity {
         Intent musiclinkIntent = getIntent();
         int activityrequest = musiclinkIntent.getIntExtra(getString(R.string.streamMusicrequest),1);
         musicLink = musiclinkIntent.getStringExtra(getString(R.string.musiclinkdata));
+        createPlayList();
+        InitComp();
+        createMediaPlayer();
         if(activityrequest == 1)
         {
             MediaPlayer mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
-
                 mediaPlayer.setDataSource(musicLink);
                 mediaPlayer.prepareAsync();
                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         mp.start();
+                        btnPlay.setImageResource(R.drawable.pause_48);
+                        imgDics.startAnimation(anim_dics);
                     }
                 });
             } catch (IOException e) {
@@ -107,12 +112,30 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
         else if(activityrequest == 0)
         {
-
+                if(arraySong.get(indexSong).getLink()==musicLink)
+                {
+                    createMediaPlayer();
+                }
+                else
+                {
+                    indexSong++;
+                    if(indexSong>arraySong.size())
+                    {
+                        indexSong=0;
+                    }
+                }
+//            mediaPlayer = MediaPlayer.create(this, Uri.parse(musicLink));
+//            mediaPlayer.prepareAsync();
+//            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mp) {
+//                    mp.start();
+//                    btnPlay.setImageResource(R.drawable.pause_48);
+//                    imgDics.startAnimation(anim_dics);
+//                }
+//            });
         }
-        InitComp();
-        AddSongs();
 
-        createMediaPlayer();
         anim_dics = AnimationUtils.loadAnimation(this, R.anim.dics_rotate);
 
         //--------------------------------------------------//
@@ -284,17 +307,20 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     private void createMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(PlayMusicActivity.this, arraySong.get(indexSong).getFile());
+        mediaPlayer = MediaPlayer.create(PlayMusicActivity.this,Uri.parse(arraySong.get(indexSong).getLink()) );
         txtTitle.setText(arraySong.get(indexSong).getTitle());
         setTime();
         updateTime();
     }
-
-    private void AddSongs() {
-        arraySong = new ArrayList<>();
-        arraySong.add(new Song("Em gái mưa", R.raw.em_gai_mua));
-        arraySong.add(new Song("Chạm khẽ tim anh một chút thôi", R.raw.cham_khe_tim_anh_mot_chut_thoi));
-
+    private void createPlayList()
+    {
+        arraySong = new ArrayList<Song>();
+        OfflineMusic offlineMusic = new OfflineMusic();
+        arraySong = offlineMusic.getPlayList();
+        Log.w("Link",arraySong.get(0).getLink());
+    }
+    public void AddSongs(ArrayList<Song> arraylistSong) {
+        arraySong = arraylistSong;
     }
 
     private void InitComp() {

@@ -17,7 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PlayMusicActivity">
+
+        <activity android:name=".PlayMusicActivity"
+            android:theme="@style/AppTheme2">
         </activity>
         <activity android:name=".MainActivity" >
             <intent-filter>
