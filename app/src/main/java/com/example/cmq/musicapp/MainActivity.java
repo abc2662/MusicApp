@@ -1,5 +1,6 @@
 package com.example.cmq.musicapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
@@ -49,7 +50,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     GoogleSignInOptions gso;
     GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 100;
@@ -115,53 +116,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Fail to","get last account info");
         }
     }
-    private Bitmap getImageBitmap(String url) {
-        Bitmap bm = null;
-        try {
-            URL aURL = new URL(url);
-            URLConnection conn = aURL.openConnection();
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();
-        } catch (IOException e) {
-            Log.e(TAG, "Error getting bitmap", e);
-        }
-        return bm;
-    }
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            // Log exception
-            return null;
-        }
-    }
-    public static Bitmap loadBitmap(String url) {
-        try {
-            //Log.e("src",src);
-            URL imgUrl = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) imgUrl.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            Log.e("Bitmap","returned");
-            return myBitmap;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("Exception",e.getMessage());
-            return null;
-        }
-    }
     //SignIn Event
     //-------------------------------------------------------------------------
     private void signIn() {
@@ -181,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.w(TAG,"sigInResult: Success");
                         tvUserName.setText(account.getDisplayName());
                         Log.w("URI",account.getPhotoUrl().toString());
+                        Picasso.with(getApplicationContext()).load(account.getPhotoUrl().toString()).into(imgUserImg);
                         //imgUserImg.setImageBitmap(loadBitmap(account.getPhotoUrl().toString()));
                         //imgUserImg.setImageURI(account.getPhotoUrl());
                         //mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
@@ -293,5 +248,10 @@ public class MainActivity extends AppCompatActivity {
                         //finish();
                     }
                 });
+    }
+
+    public void onClickPlayList(View view) {
+        Intent intent = new Intent(getApplicationContext(),OfflineMusic.class);
+        startActivity(intent);
     }
 }

@@ -22,6 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User Name"
+            android:textSize="20dp"
             android:id="@+id/tvUserName"/>
     </android.support.design.widget.AppBarLayout>
 
@@ -56,8 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.039"
-        tools:ignore="UnknownId"
-        android:onClick="OnClickSignIn"/>
+        tools:ignore="UnknownId" />
 
 
     <Button
@@ -71,7 +71,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:text="Playlist"
-        android:id="@+id/btnPlayList"/>
+        android:id="@+id/btnPlayList"
+        android:onClick="onClickPlayList"/>
 
     <Button
         android:layout_width="match_parent"

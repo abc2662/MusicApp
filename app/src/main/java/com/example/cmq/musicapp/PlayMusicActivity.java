@@ -243,8 +243,6 @@ public class PlayMusicActivity extends AppCompatActivity {
     protected void onStart()
     {
         super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-
     }
     private void updateTime(){
         //Update Time Process and SeekBar Process
