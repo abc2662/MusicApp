@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -36,13 +37,8 @@ public class OfflineMusic extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_pick);
-        lv = (ListView) findViewById(R.id.fileListView);
+        lv = (ListView) findViewById(R.id.listViewResults);
         ArrayAppend();
-
-//        final ArrayList songsListData = new ArrayList();
-////        final ListAdapter adapter = new SimpleAdapter(this, songsListData,
-////                R.layout.content_pick, new String[] { "songTitle" }, new int[] {});
-
     }
     public void ArrayAppend()
     {
@@ -69,15 +65,15 @@ public class OfflineMusic extends AppCompatActivity {
 
     public ArrayList songsList = new ArrayList();
     public ArrayList getPlayList(){
-        File home = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath());
-        int a = home.listFiles().length;
-        if(home.listFiles().length>0)
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
+        Log.w("Files", "Path: " + path);
+        File directory = new File(path);
+        if(directory.listFiles(new FileExtensionFilter()).length>0)
         {
-            for (File file : home.listFiles()) {
+            for (File file : directory.listFiles()) {
                 HashMap song = new HashMap();
                 song.put("songTitle", file.getName().substring(0, (file.getName().length() - 4)));
                 song.put("songPath", file.getPath());
-
                 // Adding each song to SongList
                 songsList.add(song);
             }

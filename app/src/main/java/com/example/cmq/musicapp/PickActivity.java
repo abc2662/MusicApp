@@ -34,7 +34,7 @@ public class PickActivity extends AppCompatActivity {
         });
 
         View contentview = findViewById(R.id.id_content_pick);
-        ListView lv = (ListView) contentview.findViewById(R.id.fileListView);
+        ListView lv = (ListView) contentview.findViewById(R.id.listViewResults);
 
         final ArrayList<String> FilesInFolder = GetFiles("/sdcard/Music");
 
