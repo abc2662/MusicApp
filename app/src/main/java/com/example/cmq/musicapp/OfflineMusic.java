@@ -38,34 +38,39 @@ import javax.xml.datatype.Duration;
 
 public class OfflineMusic extends AppCompatActivity {
     public ListView lv;
-    int READ_EXTERNAL_STORAGE_PERMISSION_CODE =1;
+    private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
     public String[] from={"songTitle","image"};
     public int[] to={R.id.tvOnlist,R.id.imgvOnlist};
     public ArrayList songsList = new ArrayList();
     public ArrayList<String> songPaths = new ArrayList<String>();
     public String[] Paths;
-    ArrayList<Song> arraySong = new ArrayList<>();
+    ArrayList<Song> arraySong = new ArrayList<Song>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_pick);
         lv = (ListView) findViewById(R.id.listViewResults);
-        final android.widget.TextView tvItem = (android.widget.TextView)findViewById(R.id.tvOnlist);
-        ArrayAppend();
+        AskPermission();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.w("Current Path",Paths[position].toString());
+                String path = Paths[position].toString();
+                Log.w("Current Path", path);
                 android.widget.TextView tvItem = (android.widget.TextView)findViewById(R.id.tvOnlist);
                 tvItem.setTextColor(Color.BLUE);
-                Intent playmusicIntent = new Intent(getApplicationContext(),PlayMusicActivity.class );
-                playmusicIntent.putExtra(getString(R.string.playMusicrequest),0);
-                playmusicIntent.putExtra(getString(R.string.musiclinkdata),Paths[position].toString());
-                startActivity(playmusicIntent);
+                playMusic(path);
             }
         });
+
     }
-    public void ArrayAppend()
+    public void playMusic(String path)
+    {
+        Intent playmusicIntent = new Intent(this,PlayMusicActivity.class );
+        playmusicIntent.putExtra(getString(R.string.musiclinkdata),path);
+        playmusicIntent.putExtra(getString(R.string.playMusicrequest),0);
+        startActivity(playmusicIntent);
+    }
+    public void AskPermission()
     {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -76,11 +81,37 @@ public class OfflineMusic extends AppCompatActivity {
 
             } else {
 
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_CONTACTS},
-                        READ_EXTERNAL_STORAGE_PERMISSION_CODE);
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    READ_EXTERNAL_STORAGE_PERMISSION_CODE);
             }
         }
+        else{
+            ArrayAppend();
+        }
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case READ_EXTERNAL_STORAGE_PERMISSION_CODE: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    ArrayAppend();
+                } else {
+                    Log.e("Permisson","Denied");
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+    public void ArrayAppend()
+    {
         getPlayList();
         SimpleAdapter simpleAdapter=new SimpleAdapter(this,songsList,R.layout.list_view_item,from,to);
         lv.setAdapter(simpleAdapter);
@@ -109,8 +140,6 @@ public class OfflineMusic extends AppCompatActivity {
             }
             Paths = songPaths.toArray(new String[songPaths.size()]);
         }
-//        PlayMusicActivity playmusic = new PlayMusicActivity();
-//        playmusic.AddSongs(arraySong);
         // return songs list array
         return arraySong;
     }

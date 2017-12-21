@@ -228,7 +228,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void onSuccess(Metadata metadata) {
                                 mMetadata = metadata;
-                                String link = metadata.getEmbedLink();
+                                String link = metadata.getWebContentLink();
                                 String title = metadata.getTitle();
                                 String mimeType = metadata.getMimeType();
                                 Intent playmusicIntent = new Intent(getApplicationContext(),PlayMusicActivity.class);

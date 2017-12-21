@@ -72,13 +72,12 @@ public class PlayMusicActivity extends AppCompatActivity {
     SeekBar sbProcess;
     ImageButton btnPrev, btnPlay, btnNext, btnStop, btnRandom, btnLoop;
     ImageView imgDics;
-    ArrayList<Song> arraySong;
+    ArrayList<Song> arraySong = new ArrayList<Song>();
     int indexSong=0;
-    MediaPlayer mediaPlayer;
+    MediaPlayer mediaPlayer = new MediaPlayer() ;
     String musicLink;
     Animation anim_dics;
-    private static int RC_SIGN_IN = 100;
-
+    public int activityrequest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,57 +85,12 @@ public class PlayMusicActivity extends AppCompatActivity {
         Log.i(TAG, "Current onCreate");
         setContentView(R.layout.activity_play_music);
         Intent musiclinkIntent = getIntent();
-        int activityrequest = musiclinkIntent.getIntExtra(getString(R.string.streamMusicrequest),1);
-        musicLink = musiclinkIntent.getStringExtra(getString(R.string.musiclinkdata));
         createPlayList();
         InitComp();
-        createMediaPlayer();
-        if(activityrequest == 1)
-        {
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            try {
-                mediaPlayer.setDataSource(musicLink);
-                mediaPlayer.prepareAsync();
-                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        mp.start();
-                        btnPlay.setImageResource(R.drawable.pause_48);
-                        imgDics.startAnimation(anim_dics);
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else if(activityrequest == 0)
-        {
-                if(arraySong.get(indexSong).getLink()==musicLink)
-                {
-                    createMediaPlayer();
-                }
-                else
-                {
-                    indexSong++;
-                    if(indexSong>arraySong.size())
-                    {
-                        indexSong=0;
-                    }
-                }
-//            mediaPlayer = MediaPlayer.create(this, Uri.parse(musicLink));
-//            mediaPlayer.prepareAsync();
-//            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                @Override
-//                public void onPrepared(MediaPlayer mp) {
-//                    mp.start();
-//                    btnPlay.setImageResource(R.drawable.pause_48);
-//                    imgDics.startAnimation(anim_dics);
-//                }
-//            });
-        }
+        activityrequest = musiclinkIntent.getIntExtra(getString(R.string.streamMusicrequest),0);
+        musicLink = musiclinkIntent.getStringExtra(getString(R.string.musiclinkdata));
+        //createMediaPlayer();
 
-        anim_dics = AnimationUtils.loadAnimation(this, R.anim.dics_rotate);
 
         //--------------------------------------------------//
         btnPlay.setOnClickListener(new View.OnClickListener() {
@@ -266,6 +220,47 @@ public class PlayMusicActivity extends AppCompatActivity {
     protected void onStart()
     {
         super.onStart();
+        if(activityrequest == 1)
+        {
+            try {
+                mediaPlayer.setDataSource(musicLink);
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.prepare();
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        mp.start();
+                        btnPlay.setImageResource(R.drawable.pause_48);
+                        imgDics.startAnimation(anim_dics);
+                        btnPlay.setImageResource(R.drawable.pause_48);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        else if(activityrequest == 0)
+        {
+            Log.w("getLink",arraySong.get(indexSong).getLink());
+            Log.w("musicLink",musicLink);
+            while(!arraySong.get(indexSong).getLink().equals(musicLink))
+            {
+                indexSong++;
+                if(indexSong>arraySong.size())
+                {
+                    indexSong=0;
+                }
+            }
+            if(arraySong.get(indexSong).getLink().equals(musicLink))
+            {
+                createMediaPlayer();
+                mediaPlayer.start();
+                btnPlay.setImageResource(R.drawable.pause_48);
+            }
+        }
+
+        anim_dics = AnimationUtils.loadAnimation(this, R.anim.dics_rotate);
     }
     private void updateTime(){
         //Update Time Process and SeekBar Process
