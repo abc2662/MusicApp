@@ -19,7 +19,8 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".PlayMusicActivity"
-            android:theme="@style/AppTheme2">
+            android:theme="@style/AppTheme2"
+            android:launchMode="singleTop">
         </activity>
         <activity android:name=".MainActivity" >
             <intent-filter>

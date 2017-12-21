@@ -4,9 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cmq.musicapp.MainActivity">
+    tools:context="com.example.cmq.musicapp.MainActivity"
+    android:backgroundTintMode="src_over"
+    android:background="@drawable/main_background"
+    >
 
     <android.support.design.widget.AppBarLayout
+        android:background="@drawable/user_banner"
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
@@ -14,16 +18,21 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <ImageView
+            android:id="@+id/imgUserImg"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:id="@+id/imgUserImg"/>
+            android:src="@drawable/default_ava"
+            android:padding="@dimen/fab_margin" />
 
         <TextView
+            android:id="@+id/tvUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User Name"
             android:textSize="20dp"
-            android:id="@+id/tvUserName"/>
+            android:textStyle="bold"
+            android:shadowRadius="10"
+            android:textColor="@android:color/white"/>
     </android.support.design.widget.AppBarLayout>
 
     <Button
@@ -33,12 +42,16 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="84dp"
         android:text="Sign Out"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_margin"
+        android:textColor="@android:color/background_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/btnSignOut"
-        android:onClick="OnClickSignOut"/>
+        android:onClick="OnClickSignOut"
+        android:backgroundTint="@android:color/transparent"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button_gg"
@@ -71,20 +84,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:text="Playlist"
+        android:textColor="@android:color/white"
         android:id="@+id/btnPlayList"
-        android:onClick="onClickPlayList"/>
+        android:onClick="onClickPlayList"
+        android:background="@android:color/holo_blue_dark"/>
 
     <Button
+        android:id="@+id/btnDriveList"
         android:layout_width="match_parent"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="236dp"
+        android:layout_marginTop="244dp"
+        android:background="@android:color/holo_blue_dark"
+        android:onClick="OnClickgetDrivePlayList"
         android:text="Drive PlayList"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/btnDriveList"
-        android:onClick="OnClickgetDrivePlayList"/>
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

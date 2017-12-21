@@ -65,7 +65,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-
 public class PlayMusicActivity extends AppCompatActivity {
 
     TextView txtTitle, txtTimeProcess, txtTimeTotal;
@@ -232,6 +231,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         if(activityrequest == 1)
         {
             try {
+                mediaPlayer.reset();
                 mediaPlayer.setDataSource(musicLink);
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mediaPlayer.prepare();
@@ -272,6 +272,18 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
 
         anim_dics = AnimationUtils.loadAnimation(this, R.anim.dics_rotate);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        if(mediaPlayer!=null){
+            mediaPlayer.stop();
+        }
     }
     private void updateTime(){
         //Update Time Process and SeekBar Process
