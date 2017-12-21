@@ -61,6 +61,7 @@ public class MainActivity extends Activity {
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
     TextView tvUserName;
     static ImageView imgUserImg;
+    public boolean signed;
     DriveResourceClient mDriveResourceClient;
     DriveClient mDriveClient;
     DriveFolder mDriveFolder;
@@ -75,8 +76,6 @@ public class MainActivity extends Activity {
         tvUserName = (TextView)findViewById(R.id.tvUserName);
         imgUserImg = (ImageView)findViewById(R.id.imgUserImg);
         //imgUserImg.setImageResource(R.drawable.ic_launcher_background);
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button_gg);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
         //Pre-Sign In
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(Drive.SCOPE_FILE)
@@ -85,42 +84,55 @@ public class MainActivity extends Activity {
                 .requestProfile()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), gso);
+        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button_gg);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
             }
         });
+
     }
     protected void onStart()
     {
         super.onStart();
         try {
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+            if(account==null)
+            {
+                signed = false;
+            }
+            else
+            {
+                signed = true;
+            }
             mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
             mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), account);
             tvUserName.setText(account.getDisplayName());
             Uri uri = account.getPhotoUrl();
             Log.w("Uri", uri.toString());
             Picasso.with(getApplicationContext()).load(uri.toString()).into(imgUserImg);
-            //imgUserImg.setImageBitmap();
-            //imgUserImg.setImageBitmap(getImageBitmap(uri.toString()));
-            //imgUserImg.setImageBitmap(loadBitmap(account.getPhotoUrl()));
-            //imgUserImg.setImageBitmap(bitmap);
-            //Uri uri = account.getPhotoUrl();
-            //Log.w("ImageLink",uri.toString());
-//            imgUserImg.setImageBitmap(loadBitmap(account.getPhotoUrl().toString()));
         }
         catch (Exception e)
         {
             Log.e("Fail to","get last account info");
         }
+
     }
     //SignIn Event
     //-------------------------------------------------------------------------
     private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        if(signed==false)
+        {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        }
+        else
+        {
+            return;
+        }
+
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -133,13 +145,14 @@ public class MainActivity extends Activity {
                     @Override
                     public void onSuccess(GoogleSignInAccount account) {
                         Log.w(TAG,"sigInResult: Success");
+                        signed = true;
                         tvUserName.setText(account.getDisplayName());
                         Log.w("URI",account.getPhotoUrl().toString());
                         Picasso.with(getApplicationContext()).load(account.getPhotoUrl().toString()).into(imgUserImg);
                         //imgUserImg.setImageBitmap(loadBitmap(account.getPhotoUrl().toString()));
                         //imgUserImg.setImageURI(account.getPhotoUrl());
-                        //mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
-                        //mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), account);
+                        mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
+                        mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), account);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -176,23 +189,30 @@ public class MainActivity extends Activity {
     //Get Drive PlayList
     //--------------------------------------------------------------------------
     public void OnClickgetDrivePlayList(View view) {
-        pickFile()
-                .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                getMetadata(driveId.asDriveFile());
-                                //openFiles(driveId.asDriveFile());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No file selected", e);
-                        //showMessage(getString(R.string.file_not_selected));
-                        finish();
-                    }
-                });
+        try{
+            pickFile()
+                    .addOnSuccessListener(this,
+                            new OnSuccessListener<DriveId>() {
+                                @Override
+                                public void onSuccess(DriveId driveId) {
+                                    getMetadata(driveId.asDriveFile());
+                                    //openFiles(driveId.asDriveFile());
+                                }
+                            })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "No file selected", e);
+                            //showMessage(getString(R.string.file_not_selected));
+                            finish();
+                        }
+                    });
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(),"Sign In needed",Toast.LENGTH_SHORT);
+        }
+
     }
     //OTHER FUNCTION
     //---------------------------------------------------------------------------

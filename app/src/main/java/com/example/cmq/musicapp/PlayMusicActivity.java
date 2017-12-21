@@ -114,11 +114,22 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mediaPlayer.stop();
-                mediaPlayer.release();
-                btnPlay.setImageResource(R.drawable.play_48);
-                imgDics.clearAnimation();
-                createMediaPlayer();
+                if(activityrequest == 0)
+                {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    btnPlay.setImageResource(R.drawable.play_48);
+                    imgDics.clearAnimation();
+                    createMediaPlayer();
+                }
+                else if(activityrequest == 1)
+                {
+                    mediaPlayer.seekTo(0);
+                    mediaPlayer.pause();
+                    btnPlay.setImageResource(R.drawable.play_48);
+                    imgDics.clearAnimation();
+                }
+
             }
         });
 
@@ -196,25 +207,23 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnLoop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = musicLink;
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                try {
-
-                    mediaPlayer.setDataSource(url);
-                    mediaPlayer.prepareAsync();
-                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mp.start();
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(mediaPlayer.isLooping()==false) {
+                    mediaPlayer.setLooping(true);
+                }
+                else if(mediaPlayer.isLooping()==true)
+                {
+                    mediaPlayer.setLooping(false);
                 }
             }
         });
-
+        btnRandom.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Collections.shuffle(arraySong);
+            }
+        });
     }
 
     protected void onStart()
@@ -233,6 +242,8 @@ public class PlayMusicActivity extends AppCompatActivity {
                         btnPlay.setImageResource(R.drawable.pause_48);
                         imgDics.startAnimation(anim_dics);
                         btnPlay.setImageResource(R.drawable.pause_48);
+                        setTime();
+                        updateTime();
                     }
                 });
             } catch (IOException e) {
