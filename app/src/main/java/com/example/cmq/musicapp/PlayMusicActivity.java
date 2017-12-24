@@ -72,10 +72,14 @@ public class PlayMusicActivity extends AppCompatActivity {
     ImageButton btnPrev, btnPlay, btnNext, btnStop, btnRandom, btnLoop;
     ImageView imgDics;
     ArrayList<Song> arraySong = new ArrayList<Song>();
+    ArrayList<Song> shuffleArraysong = new ArrayList<>();
+    ArrayList<Song> temparraySong = new ArrayList<Song>();
     int indexSong=0;
     MediaPlayer mediaPlayer = new MediaPlayer() ;
     String musicLink;
     Animation anim_dics;
+    boolean loopall =  false;
+    boolean shuffle = false;
     public int activityrequest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,11 +210,21 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnLoop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mediaPlayer.isLooping()==false) {
+                if(mediaPlayer.isLooping()==false&&loopall == false) {
+                    btnLoop.setImageResource(R.drawable.loop_all);
+                    loopall = true;
+                }
+                else if(loopall == true)
+                {
+                    btnLoop.setImageResource(R.drawable.loop_one);
+                    loopall = false;
                     mediaPlayer.setLooping(true);
                 }
-                else if(mediaPlayer.isLooping()==true)
+                else if(loopall==false&&mediaPlayer.isLooping()==true)
                 {
+                    btnLoop.setImageResource(R.drawable.loop_48);
+                    mediaPlayer.setLooping(false);
+                    loopall = false;
                     mediaPlayer.setLooping(false);
                 }
             }
@@ -220,7 +234,22 @@ public class PlayMusicActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                Collections.shuffle(arraySong);
+                if(shuffle == false)
+                {
+                    btnRandom.setImageResource(R.drawable.random_selected);
+                    shuffle = true;
+                    Collections.shuffle(shuffleArraysong);
+                    temparraySong = arraySong;
+                    arraySong = shuffleArraysong;
+                }
+                else
+                {
+                    btnRandom.setImageResource(R.drawable.random_48);
+                    arraySong = temparraySong;
+                    shuffle = false;
+                }
+
+
             }
         });
     }
@@ -276,14 +305,15 @@ public class PlayMusicActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(mediaPlayer.isPlaying())
+        {
+            mediaPlayer.stop();
+        }
     }
     @Override
     protected void onStop()
     {
         super.onStop();
-        if(mediaPlayer!=null){
-            mediaPlayer.stop();
-        }
     }
     private void updateTime(){
         //Update Time Process and SeekBar Process
@@ -299,18 +329,27 @@ public class PlayMusicActivity extends AppCompatActivity {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         indexSong++;
-                        if (indexSong > arraySong.size() - 1) {
+                        if ((indexSong > arraySong.size()-1)&&loopall == false) {
                             indexSong = 0;
+                            createMediaPlayer();
+                            btnPlay.setImageResource(R.drawable.play_48);
+                            //mediaPlayer.release();
+                        }
+                        else if((indexSong>arraySong.size()-1)&&loopall==true)
+                        {
+                            indexSong = 0;
+                            createMediaPlayer();
+                            mediaPlayer.start();
+                            btnPlay.setImageResource(R.drawable.pause_48);
+                        }
+                        else
+                        {
+                            createMediaPlayer();
+                            mediaPlayer.start();
+                            btnPlay.setImageResource(R.drawable.pause_48);
                         }
 
-                        if (mediaPlayer.isPlaying()){
-                            mediaPlayer.stop();
-                            mediaPlayer.release();
-                        }
 
-                        createMediaPlayer();
-                        mediaPlayer.start();
-                        btnPlay.setImageResource(R.drawable.pause_48);
                     }
                 });
                 handler.postDelayed(this, 500);
@@ -336,6 +375,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         OfflineMusic offlineMusic = new OfflineMusic();
         arraySong = offlineMusic.getPlayList();
         Log.w("Link",arraySong.get(0).getLink());
+        shuffleArraysong = arraySong;
     }
     public void AddSongs(ArrayList<Song> arraylistSong) {
         arraySong = arraylistSong;

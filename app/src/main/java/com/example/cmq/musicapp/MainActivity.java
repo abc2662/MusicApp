@@ -183,6 +183,7 @@ public class MainActivity extends Activity {
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(getApplicationContext(),"Signed Out",Toast.LENGTH_LONG).show();
                 Log.w(TAG, "SignOut Success!");
+                signed = false;
             }
         });
     }
