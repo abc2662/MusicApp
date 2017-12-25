@@ -254,6 +254,7 @@ public class MainActivity extends Activity {
                                 String mimeType = metadata.getMimeType();
                                 Intent playmusicIntent = new Intent(getApplicationContext(),PlayMusicActivity.class);
                                 playmusicIntent.putExtra(getString(R.string.musiclinkdata),link);
+                                playmusicIntent.putExtra(getString(R.string.songtitle),title);
                                 playmusicIntent.putExtra(getString(R.string.streamMusicrequest),1);
                                 Log.w("Link", link);
                                 Log.w("MimeType", mimeType);

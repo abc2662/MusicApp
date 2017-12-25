@@ -77,6 +77,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     int indexSong=0;
     MediaPlayer mediaPlayer = new MediaPlayer() ;
     String musicLink;
+    String title;
     Animation anim_dics;
     boolean loopall =  false;
     boolean shuffle = false;
@@ -91,11 +92,16 @@ public class PlayMusicActivity extends AppCompatActivity {
         createPlayList();
         InitComp();
         activityrequest = musiclinkIntent.getIntExtra(getString(R.string.streamMusicrequest),0);
+
+
         musicLink = musiclinkIntent.getStringExtra(getString(R.string.musiclinkdata));
-        //createMediaPlayer();
-
-
-        //--------------------------------------------------//
+        try{
+            title = musiclinkIntent.getStringExtra(getString(R.string.songtitle));
+        }
+        catch (Exception e)
+        {
+            Log.w("OnDrive","Playlist");
+        }
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,6 +149,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(mediaPlayer.isLooping()==true)
+                {
+                 mediaPlayer.seekTo(0);
+                 return;
+                }
                 indexSong++;
                 if (indexSong > arraySong.size() - 1) {
                     indexSong = 0;
@@ -166,6 +177,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(mediaPlayer.isLooping()==true)
+                {
+                    mediaPlayer.seekTo(0);
+                    return;
+                }
                 indexSong--;
                 if (indexSong < 0) {
                     indexSong = arraySong.size() - 1;
@@ -225,7 +241,6 @@ public class PlayMusicActivity extends AppCompatActivity {
                     btnLoop.setImageResource(R.drawable.loop_48);
                     mediaPlayer.setLooping(false);
                     loopall = false;
-                    mediaPlayer.setLooping(false);
                 }
             }
         });
@@ -248,8 +263,6 @@ public class PlayMusicActivity extends AppCompatActivity {
                     arraySong = temparraySong;
                     shuffle = false;
                 }
-
-
             }
         });
     }
@@ -257,12 +270,14 @@ public class PlayMusicActivity extends AppCompatActivity {
     protected void onStart()
     {
         super.onStart();
+        anim_dics = AnimationUtils.loadAnimation(this, R.anim.dics_rotate);
         if(activityrequest == 1)
         {
             try {
                 mediaPlayer.reset();
                 mediaPlayer.setDataSource(musicLink);
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                txtTitle.setText(title);
                 mediaPlayer.prepare();
                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
@@ -296,11 +311,12 @@ public class PlayMusicActivity extends AppCompatActivity {
             {
                 createMediaPlayer();
                 mediaPlayer.start();
+                imgDics.startAnimation(anim_dics);
                 btnPlay.setImageResource(R.drawable.pause_48);
             }
         }
 
-        anim_dics = AnimationUtils.loadAnimation(this, R.anim.dics_rotate);
+
     }
     @Override
     protected void onDestroy() {
@@ -333,7 +349,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                             indexSong = 0;
                             createMediaPlayer();
                             btnPlay.setImageResource(R.drawable.play_48);
-                            //mediaPlayer.release();
+                            imgDics.clearAnimation();
                         }
                         else if((indexSong>arraySong.size()-1)&&loopall==true)
                         {
