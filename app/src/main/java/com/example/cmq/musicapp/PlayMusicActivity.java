@@ -253,6 +253,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 {
                     btnRandom.setImageResource(R.drawable.random_selected);
                     shuffle = true;
+                    shuffleArraysong = arraySong;
                     Collections.shuffle(shuffleArraysong);
                     temparraySong = arraySong;
                     arraySong = shuffleArraysong;
@@ -324,6 +325,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         if(mediaPlayer.isPlaying())
         {
             mediaPlayer.stop();
+
         }
     }
     @Override
@@ -380,6 +382,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     private void createMediaPlayer(){
+        mediaPlayer.release();
         mediaPlayer = MediaPlayer.create(PlayMusicActivity.this,Uri.parse(arraySong.get(indexSong).getLink()) );
         txtTitle.setText(arraySong.get(indexSong).getTitle());
         setTime();
@@ -391,7 +394,6 @@ public class PlayMusicActivity extends AppCompatActivity {
         OfflineMusic offlineMusic = new OfflineMusic();
         arraySong = offlineMusic.getPlayList();
         Log.w("Link",arraySong.get(0).getLink());
-        shuffleArraysong = arraySong;
     }
     public void AddSongs(ArrayList<Song> arraylistSong) {
         arraySong = arraylistSong;
