@@ -56,8 +56,6 @@ public class OfflineMusic extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String path = Paths[position].toString();
                 Log.w("Current Path", path);
-                android.widget.TextView tvItem = (android.widget.TextView)findViewById(R.id.tvOnlist);
-                tvItem.setTextColor(Color.BLUE);
                 playMusic(path);
             }
         });
