@@ -49,11 +49,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/btnSignOut"
-        android:onClick="OnClickSignOut"
+        android:onClick="btnSignOut_OnClick"
         android:backgroundTint="@android:color/transparent"/>
 
     <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button_gg"
+        android:id="@+id/btnSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/layout_Time"
@@ -80,7 +80,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="240dp"
         android:background="@drawable/folder"
-        android:onClick="onClickPlayList"
+        android:onClick="btnPlayList_OnClick"
         android:text="Playlist"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -96,7 +96,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="388dp"
         android:background="@drawable/drive_folder"
-        android:onClick="OnClickgetDrivePlayList"
+        android:onClick="btnDriveList_OnClick"
         android:text="Drive PlayList"
         android:textColor="@android:color/white"
         android:textStyle="bold"
