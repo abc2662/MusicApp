@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
     public static String extra_title = "title";
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
     TextView tvUserName;
-    static ImageView imgUserImg;
+    ImageView imgUserImg;
     public boolean signed;
     DriveResourceClient mDriveResourceClient;
     DriveClient mDriveClient;
@@ -185,6 +185,8 @@ public class MainActivity extends Activity {
                 Toast.makeText(getApplicationContext(),"Signed Out",Toast.LENGTH_LONG).show();
                 Log.w(TAG, "SignOut Success!");
                 signed = false;
+                imgUserImg.setImageResource(R.drawable.default_ava);
+                tvUserName.setText("");
             }
         });
     }
