@@ -75,7 +75,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     ArrayList<Song> shuffleArraysong = new ArrayList<>();
     ArrayList<Song> temparraySong = new ArrayList<Song>();
     int indexSong=0;
-    MediaPlayer mediaPlayer = new MediaPlayer() ;
+    static MediaPlayer mediaPlayer = new MediaPlayer() ;
     String musicLink;
     String title;
     Animation anim_dics;
@@ -85,9 +85,13 @@ public class PlayMusicActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_play_music);
+        if(mediaPlayer.isPlaying()== true)
+        {
+            mediaPlayer.stop();
+        }
         String TAG =  "onCreate: ";
         Log.i(TAG, "Current onCreate");
-        setContentView(R.layout.activity_play_music);
         Intent musiclinkIntent = getIntent();
         createPlayList();
         InitComp();
@@ -266,6 +270,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 }
             }
         });
+        int a;
     }
 
     protected void onStart()
@@ -322,11 +327,11 @@ public class PlayMusicActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mediaPlayer.isPlaying())
-        {
-            mediaPlayer.stop();
-
-        }
+//        if(mediaPlayer.isPlaying())
+//        {
+//            mediaPlayer.stop();
+//
+//        }
     }
     @Override
     protected void onStop()
@@ -382,7 +387,10 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     private void createMediaPlayer(){
-        mediaPlayer.release();
+        if(mediaPlayer != null)
+        {
+            mediaPlayer.release();
+        }
         mediaPlayer = MediaPlayer.create(PlayMusicActivity.this,Uri.parse(arraySong.get(indexSong).getLink()) );
         txtTitle.setText(arraySong.get(indexSong).getTitle());
         setTime();
