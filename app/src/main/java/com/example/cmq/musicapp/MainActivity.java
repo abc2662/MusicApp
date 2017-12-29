@@ -31,6 +31,7 @@ import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.OpenFileActivityOptions;
+import com.google.android.gms.drive.query.Filter;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.SearchableField;
 import com.google.android.gms.tasks.Continuation;
@@ -60,7 +61,7 @@ public class MainActivity extends Activity {
     public static String extra_title = "title";
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
     TextView tvUserName;
-    static ImageView imgUserImg;
+    ImageView imgUserImg;
     public boolean signed;
     DriveResourceClient mDriveResourceClient;
     DriveClient mDriveClient;
@@ -184,6 +185,8 @@ public class MainActivity extends Activity {
                 Toast.makeText(getApplicationContext(),"Signed Out",Toast.LENGTH_LONG).show();
                 Log.w(TAG, "SignOut Success!");
                 signed = false;
+                imgUserImg.setImageResource(R.drawable.default_ava);
+                tvUserName.setText("");
             }
         });
     }
@@ -234,7 +237,7 @@ public class MainActivity extends Activity {
     protected Task<DriveId> pickFile() {
         OpenFileActivityOptions openOptions =
                 new OpenFileActivityOptions.Builder()
-                        .setSelectionFilter(Filters.eq(SearchableField.MIME_TYPE,"audio/mp3"))
+                        .setSelectionFilter(Filters.or(Filters.eq(SearchableField.MIME_TYPE,"audio/mpeg"),Filters.eq(SearchableField.MIME_TYPE,"audio/mp3")))
                         .setActivityTitle("Select File")
                         .build();
         return pickItem(openOptions);
@@ -258,6 +261,7 @@ public class MainActivity extends Activity {
                                 playmusicIntent.putExtra(getString(R.string.streamMusicrequest),1);
                                 Log.w("Link", link);
                                 Log.w("MimeType", mimeType);
+                                Log.w("MimeType",mMetadata.getMimeType().toString());
                                 startActivity(playmusicIntent);
                                 //finish();
                             }

@@ -63,7 +63,7 @@ public class OfflineMusic extends AppCompatActivity {
     }
     public void playMusic(String path)
     {
-        Intent playmusicIntent = new Intent(this,PlayMusicActivity.class );
+        Intent playmusicIntent = new Intent(getApplicationContext(),PlayMusicActivity.class );
         playmusicIntent.putExtra(getString(R.string.musiclinkdata),path);
         playmusicIntent.putExtra(getString(R.string.playMusicrequest),0);
         startActivity(playmusicIntent);
