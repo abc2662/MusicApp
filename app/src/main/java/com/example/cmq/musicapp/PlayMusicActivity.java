@@ -107,11 +107,11 @@ public class PlayMusicActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mediaPlayer.isPlaying()) {
                     mediaPlayer.pause();
-                    btnPlay.setImageResource(R.drawable.play_48);
+                    btnPlay.setImageResource(R.drawable.play);
                     imgDics.clearAnimation();
                 } else {
                     mediaPlayer.start();
-                    btnPlay.setImageResource(R.drawable.pause_48);
+                    btnPlay.setImageResource(R.drawable.pause);
                     imgDics.startAnimation(anim_dics);
                 }
             }
@@ -127,7 +127,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 {
                     mediaPlayer.stop();
                     mediaPlayer.release();
-                    btnPlay.setImageResource(R.drawable.play_48);
+                    btnPlay.setImageResource(R.drawable.play);
                     imgDics.clearAnimation();
                     createMediaPlayer();
                 }
@@ -135,7 +135,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 {
                     mediaPlayer.seekTo(0);
                     mediaPlayer.pause();
-                    btnPlay.setImageResource(R.drawable.play_48);
+                    btnPlay.setImageResource(R.drawable.play);
                     imgDics.clearAnimation();
                 }
 
@@ -166,7 +166,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 
                 createMediaPlayer();
                 mediaPlayer.start();
-                btnPlay.setImageResource(R.drawable.pause_48);
+                btnPlay.setImageResource(R.drawable.pause);
                 imgDics.startAnimation(anim_dics);
             }
         });
@@ -194,7 +194,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 
                 createMediaPlayer();
                 mediaPlayer.start();
-                btnPlay.setImageResource(R.drawable.pause_48);
+                btnPlay.setImageResource(R.drawable.pause);
                 imgDics.startAnimation(anim_dics);
             }
         });
@@ -227,18 +227,18 @@ public class PlayMusicActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(mediaPlayer.isLooping()==false&&loopall == false) {
-                    btnLoop.setImageResource(R.drawable.loop_all);
+                    btnLoop.setImageResource(R.drawable.replay_selected);
                     loopall = true;
                 }
                 else if(loopall == true)
                 {
-                    btnLoop.setImageResource(R.drawable.loop_one);
+                    btnLoop.setImageResource(R.drawable.replay_loop);
                     loopall = false;
                     mediaPlayer.setLooping(true);
                 }
                 else if(loopall==false&&mediaPlayer.isLooping()==true)
                 {
-                    btnLoop.setImageResource(R.drawable.loop_48);
+                    btnLoop.setImageResource(R.drawable.replay);
                     mediaPlayer.setLooping(false);
                     loopall = false;
                 }
@@ -251,7 +251,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             {
                 if(shuffle == false)
                 {
-                    btnRandom.setImageResource(R.drawable.random_selected);
+                    btnRandom.setImageResource(R.drawable.shuffle_selected);
                     shuffle = true;
                     shuffleArraysong = arraySong;
                     Collections.shuffle(shuffleArraysong);
@@ -260,7 +260,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    btnRandom.setImageResource(R.drawable.random_48);
+                    btnRandom.setImageResource(R.drawable.shuffle);
                     arraySong = temparraySong;
                     shuffle = false;
                 }
@@ -284,9 +284,9 @@ public class PlayMusicActivity extends AppCompatActivity {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         mp.start();
-                        btnPlay.setImageResource(R.drawable.pause_48);
+                        btnPlay.setImageResource(R.drawable.pause);
                         imgDics.startAnimation(anim_dics);
-                        btnPlay.setImageResource(R.drawable.pause_48);
+                        btnPlay.setImageResource(R.drawable.pause);
                         setTime();
                         updateTime();
                     }
@@ -313,7 +313,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 createMediaPlayer();
                 mediaPlayer.start();
                 imgDics.startAnimation(anim_dics);
-                btnPlay.setImageResource(R.drawable.pause_48);
+                btnPlay.setImageResource(R.drawable.pause);
             }
         }
 
@@ -350,7 +350,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                         if ((indexSong > arraySong.size()-1)&&loopall == false) {
                             indexSong = 0;
                             createMediaPlayer();
-                            btnPlay.setImageResource(R.drawable.play_48);
+                            btnPlay.setImageResource(R.drawable.play);
                             imgDics.clearAnimation();
                         }
                         else if((indexSong>arraySong.size()-1)&&loopall==true)
@@ -358,13 +358,13 @@ public class PlayMusicActivity extends AppCompatActivity {
                             indexSong = 0;
                             createMediaPlayer();
                             mediaPlayer.start();
-                            btnPlay.setImageResource(R.drawable.pause_48);
+                            btnPlay.setImageResource(R.drawable.pause);
                         }
                         else
                         {
                             createMediaPlayer();
                             mediaPlayer.start();
-                            btnPlay.setImageResource(R.drawable.pause_48);
+                            btnPlay.setImageResource(R.drawable.pause);
                         }
 
 
