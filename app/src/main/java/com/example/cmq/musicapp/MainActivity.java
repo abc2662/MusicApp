@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
                 .requestProfile()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), gso);
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button_gg);
+        SignInButton signInButton = (SignInButton) findViewById(R.id.btnSignIn);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
