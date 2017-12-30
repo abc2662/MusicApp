@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OfflineMusic"></activity>
+        <activity android:name=".OfflineMusicActivity"></activity>
         <activity
             android:name=".PickActivity"
             android:label="@string/title_activity_pick"
