@@ -34,7 +34,7 @@
 
     <include
         android:id="@+id/id_content_pick"
-        layout="@layout/content_pick" />
+        layout="@layout/activity_offline_music" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

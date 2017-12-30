@@ -3,14 +3,9 @@ package com.example.cmq.musicapp;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.media.Image;
-import android.media.MediaDataSource;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,44 +16,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.drive.DriveClient;
-import com.google.android.gms.drive.DriveContents;
-import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.Metadata;
-import com.google.android.gms.drive.MetadataBuffer;
-import com.google.android.gms.drive.query.Filters;
-import com.google.android.gms.drive.query.Query;
-import com.google.android.gms.drive.query.SearchableField;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import com.google.android.gms.drive.DriveResource;
-import com.google.android.gms.drive.DriveResourceClient;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.drive.Drive;
 
 //import com.google.api.services.drive.Drive;
-
-import com.google.android.gms.common.AccountPicker;
 
 
 import java.io.IOException;
@@ -395,7 +354,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     private void createPlayList()
     {
         arraySong = new ArrayList<Song>();
-        OfflineMusic offlineMusic = new OfflineMusic();
+        OfflineMusicActivity offlineMusic = new OfflineMusicActivity();
         arraySong = offlineMusic.getPlayList();
         Log.w("Link",arraySong.get(0).getLink());
     }
