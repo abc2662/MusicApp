@@ -5,21 +5,24 @@ public class Song {
     private int File;
     private String Link;
 
-    public Song(String title , int file) {
+    public Song(String title, int file) {
         Title = title;
         File = file;
     }
-    public Song(String title , String link) {
+
+    public Song(String title, String link) {
         Title = title;
         Link = link;
     }
-    protected String getTitle() {
+
+    public String getTitle() {
         return Title;
     }
-    protected String getLink()
-    {
+
+    public String getLink() {
         return Link;
     }
+
     public void setTitle(String title) {
         Title = title;
     }
