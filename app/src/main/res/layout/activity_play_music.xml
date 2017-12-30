@@ -6,135 +6,166 @@
     android:layout_height="match_parent"
     tools:context="com.example.cmq.musicapp.PlayMusicActivity">
     <!--Header: Title, Timer, Option-->
+    <LinearLayout
+        android:id="@+id/layout_dics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorHighestDark"
+        android:orientation="vertical"
+        android:padding="10sp">
+
+        <ImageView
+            android:id="@+id/img_Dics"
+            android:layout_width="300sp"
+            android:layout_height="300sp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@null"
+            android:src="@drawable/cd_512" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/txt_TitleSong"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/layout_dics"
         android:fontFamily="@string/fontFamily"
+        android:maxLength="25"
         android:padding="5sp"
         android:text="@string/song_name"
-        android:textSize="24sp"
-        tools:ignore="UnusedAttribute" />
-
-    <!--List Song: List of songs-->
-
-    <ImageView
-        android:id="@+id/img_Dics"
-        android:layout_width="300sp"
-        android:layout_height="300sp"
-        android:layout_below="@+id/txt_TitleSong"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="@null"
-        android:src="@drawable/cd_512" />
+        android:textAlignment="center"
+        android:textColor="@color/colorText2"
+        android:textSize="24sp" />
     <!--Media Controller: Processing bar, Time of song, Button control-->
+
     <RelativeLayout
         android:id="@+id/layout_Time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/sb_Process"
-        android:padding="5sp">
+        android:layout_above="@+id/layout_Control"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:padding="10sp">
 
         <TextView
             android:id="@+id/txt_TimeProcess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:text="@string/text_Clock"
-            android:textColor="@color/colorText"
-            android:textSize="20sp" />
+            android:textColor="@color/colorText2"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/sb_Process"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/txt_TimeProcess"
+            android:layout_toStartOf="@+id/txt_TimeTotal"/>
 
         <TextView
             android:id="@+id/txt_TimeTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:text="@string/text_Clock"
-            android:textColor="@color/colorText"
-            android:textSize="20sp"
-            tools:ignore="RelativeOverlap" />
+            android:textColor="@color/colorText2"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_alignParentEnd="true"/>
     </RelativeLayout>
-
-
-    <SeekBar
-        android:id="@+id/sb_Process"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_Control"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="5sp" />
-
     <LinearLayout
         android:id="@+id/layout_Control"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:orientation="horizontal"
-        tools:ignore="UnknownId">
-
-        <ImageButton
-            android:id="@+id/btn_random"
-            android:layout_width="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/random_48"
-            tools:ignore="ContentDescription"
-            />
+            android:gravity="center"
+            android:orientation="horizontal"
+            tools:ignore="UnknownId">
 
-        <ImageButton
-            android:id="@+id/btn_prev"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/prev_48"
-            tools:ignore="ContentDescription" />
+            <ImageButton
+                android:id="@+id/btn_random"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/shuffle"
+                tools:ignore="ContentDescription" />
 
-        <ImageButton
-            android:id="@+id/btn_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/play_48"
-            tools:ignore="ContentDescription" />
+            <ImageButton
+                android:id="@+id/btn_prev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/back"
+                tools:ignore="ContentDescription" />
 
-        <ImageButton
-            android:id="@+id/btn_stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/stop_48"
-            tools:ignore="ContentDescription" />
+            <ImageButton
+                android:id="@+id/btn_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/play"
+                tools:ignore="ContentDescription" />
 
-        <ImageButton
-            android:id="@+id/btn_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/next_48"
-            tools:ignore="ContentDescription" />
+            <ImageButton
+                android:id="@+id/btn_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/stop"
+                tools:ignore="ContentDescription" />
 
-        <ImageButton
-            android:id="@+id/btn_loop"
-            android:layout_width="wrap_content"
+            <ImageButton
+                android:id="@+id/btn_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/next"
+                tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/btn_loop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/replay"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/loop_48"
-            tools:ignore="ContentDescription" />
+            android:padding="5dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/list1"
+                android:layout_marginStart="25sp"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="25sp"
+                android:src="@drawable/like"/>
+        </RelativeLayout>
     </LinearLayout>
+
+
 </RelativeLayout>
