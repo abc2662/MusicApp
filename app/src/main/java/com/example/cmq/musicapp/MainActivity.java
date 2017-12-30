@@ -281,8 +281,8 @@ public class MainActivity extends Activity {
                 });
     }
 
-    public void onClickPlayList(View view) {
-        Intent intent = new Intent(getApplicationContext(),OfflineMusic.class);
+    public void btnPlayList_OnClick(View view) {
+        Intent intent = new Intent(getApplicationContext(),OfflineMusicActivity.class);
         startActivity(intent);
     }
 }

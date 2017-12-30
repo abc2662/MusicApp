@@ -38,7 +38,7 @@ import javax.xml.datatype.Duration;
 
 
 
-public class OfflineMusic extends AppCompatActivity {
+public class OfflineMusicActivity extends AppCompatActivity {
     public ListView lv;
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
     public String[] from={"songTitle","image","artist"};
@@ -55,7 +55,7 @@ public class OfflineMusic extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_pick);
+        setContentView(R.layout.activity_offline_music);
         lv = (ListView) findViewById(R.id.listViewResults);
         searchView = (SearchView)findViewById(R.id.svSearch);
 
