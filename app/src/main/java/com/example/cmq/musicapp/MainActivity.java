@@ -197,7 +197,7 @@ public class MainActivity extends Activity {
     }
     //Get Drive PlayList
     //--------------------------------------------------------------------------
-    public void OnClickgetDrivePlayList(View view) {
+    public void btnDriveList_OnClick(View view) {
         try{
             pickFile()
                     .addOnSuccessListener(this,
