@@ -20,8 +20,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".PlayMusicActivity"
-            android:theme="@style/AppTheme2"
-            android:launchMode="singleTop">
+            android:theme="@style/AppTheme2">
         </activity>
         <activity android:name=".MainActivity" >
             <intent-filter>

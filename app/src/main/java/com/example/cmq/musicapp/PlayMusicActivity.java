@@ -153,11 +153,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mediaPlayer.isLooping()==true)
-                {
-                 mediaPlayer.seekTo(0);
-                 return;
-                }
+//                if(mediaPlayer.isLooping()==true)
+//                {
+//                 mediaPlayer.seekTo(0);
+//                 return;
+//                }
                 indexSong++;
                 if (indexSong > arraySong.size() - 1) {
                     indexSong = 0;
@@ -181,11 +181,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mediaPlayer.isLooping()==true)
-                {
-                    mediaPlayer.seekTo(0);
-                    return;
-                }
+//                if(mediaPlayer.isLooping()==true)
+//                {
+//                    mediaPlayer.seekTo(0);
+//                    return;
+//                }
                 indexSong--;
                 if (indexSong < 0) {
                     indexSong = arraySong.size() - 1;
@@ -272,7 +272,6 @@ public class PlayMusicActivity extends AppCompatActivity {
         });
         int a;
     }
-
     protected void onStart()
     {
         super.onStart();
@@ -303,6 +302,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
         else if(activityrequest == 0)
         {
+
             Log.w("getLink",arraySong.get(indexSong).getLink());
             Log.w("musicLink",musicLink);
             while(!arraySong.get(indexSong).getLink().equals(musicLink))
@@ -327,11 +327,6 @@ public class PlayMusicActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        if(mediaPlayer.isPlaying())
-//        {
-//            mediaPlayer.stop();
-//
-//        }
     }
     @Override
     protected void onStop()
@@ -391,6 +386,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         {
             mediaPlayer.release();
         }
+
         mediaPlayer = MediaPlayer.create(PlayMusicActivity.this,Uri.parse(arraySong.get(indexSong).getLink()) );
         txtTitle.setText(arraySong.get(indexSong).getTitle());
         setTime();

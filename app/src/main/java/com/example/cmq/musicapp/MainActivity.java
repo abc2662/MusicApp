@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,17 +56,16 @@ public class MainActivity extends Activity {
     GoogleSignInOptions gso;
     GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 100;
-    private static final int REQUEST_CODE_CREATE_FILE = 200;
     private static final int REQUEST_CODE_OPEN_ITEM = 300;
-    public static String extra_image = "image";
-    public static String extra_title = "title";
+    static MediaPlayer mediaPlayer = new MediaPlayer() ;
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
     TextView tvUserName;
     ImageView imgUserImg;
+    SignInButton signInButton;
+    Button signOutButton;
     public boolean signed;
     DriveResourceClient mDriveResourceClient;
     DriveClient mDriveClient;
-    DriveFolder mDriveFolder;
     Metadata mMetadata;
     MediaPlayer mp = new MediaPlayer();
     static String TAG = "OnActivity ";
@@ -85,7 +85,8 @@ public class MainActivity extends Activity {
                 .requestProfile()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), gso);
-        SignInButton signInButton = (SignInButton) findViewById(R.id.btnSignIn);
+        signInButton = (SignInButton) findViewById(R.id.btnSignIn);
+        signOutButton = (Button)findViewById(R.id.btnSignOut);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,9 +104,13 @@ public class MainActivity extends Activity {
             if(account==null)
             {
                 signed = false;
+                signInButton.setVisibility(View.VISIBLE);
+                signOutButton.setVisibility(View.GONE);
             }
             else
             {
+                signInButton.setVisibility(View.GONE);
+                signOutButton.setVisibility(View.VISIBLE);
                 signed = true;
             }
             mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
