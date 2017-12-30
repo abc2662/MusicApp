@@ -190,6 +190,7 @@ public class MainActivity extends Activity {
                 Toast.makeText(getApplicationContext(),"Signed Out",Toast.LENGTH_LONG).show();
                 Log.w(TAG, "SignOut Success!");
                 signed = false;
+                signInButton.setVisibility(View.VISIBLE);
                 imgUserImg.setImageResource(R.drawable.default_ava);
                 tvUserName.setText("");
             }
