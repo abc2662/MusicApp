@@ -9,13 +9,13 @@
         android:layout_height="@dimen/app_bar_height"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
+
         <ImageView
+            android:id="@+id/imgposter"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/imgposter"
-            android:src="@drawable/poster"
-            android:scaleType="fitXY"
-            />
+            android:scaleType="centerCrop"
+            android:src="@drawable/poster" />
     </android.support.design.widget.AppBarLayout>
 
     <SearchView

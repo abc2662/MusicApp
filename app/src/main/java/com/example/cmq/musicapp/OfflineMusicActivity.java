@@ -55,7 +55,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offline_music);
+        setContentView(R.layout.activity_pick);
         lv = (ListView) findViewById(R.id.listViewResults);
         searchView = (SearchView)findViewById(R.id.svSearch);
 
