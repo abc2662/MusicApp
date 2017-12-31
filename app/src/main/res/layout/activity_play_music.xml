@@ -7,7 +7,7 @@
     tools:context="com.example.cmq.musicapp.PlayMusicActivity">
     <!--Header: Title, Timer, Option-->
     <LinearLayout
-        android:id="@+id/layout_dics"
+        android:id="@+id/layout_Disc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorHighestDark"
@@ -15,7 +15,7 @@
         android:padding="10sp">
 
         <ImageView
-            android:id="@+id/img_Dics"
+            android:id="@+id/img_Disc"
             android:layout_width="300sp"
             android:layout_height="300sp"
             android:layout_gravity="center_horizontal"
@@ -27,7 +27,7 @@
         android:id="@+id/txt_TitleSong"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_dics"
+        android:layout_below="@+id/layout_Disc"
         android:fontFamily="@string/fontFamily"
         android:maxLength="25"
         android:padding="5sp"

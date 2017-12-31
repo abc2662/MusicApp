@@ -29,7 +29,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     TextView txtTitle, txtTimeProcess, txtTimeTotal;
     SeekBar sbProcess;
     ImageButton btnPrev, btnPlay, btnNext, btnStop, btnRandom, btnLoop;
-    ImageView imgDics;
+    ImageView imgDisc;
     static ArrayList<Song> arraySong = new ArrayList<Song>();
     static ArrayList<Song> shuffleArraysong = new ArrayList<>();
     static ArrayList<Song> temparraySong = new ArrayList<Song>();
@@ -37,7 +37,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     static String title;
     static MediaPlayer mediaPlayer = new MediaPlayer() ;
     String musicLink;
-    Animation anim_dics;
+    Animation anim_disc;
     static boolean loopall =  false;
     static boolean shuffle = false;
     public int activityrequest;
@@ -58,11 +58,11 @@ public class PlayMusicActivity extends AppCompatActivity {
                 if (mediaPlayer.isPlaying()) {
                     mediaPlayer.pause();
                     btnPlay.setImageResource(R.drawable.play);
-                    imgDics.clearAnimation();
+                    imgDisc.clearAnimation();
                 } else {
                     mediaPlayer.start();
                     btnPlay.setImageResource(R.drawable.pause);
-                    imgDics.startAnimation(anim_dics);
+                    imgDisc.startAnimation(anim_disc);
                 }
             }
         });
@@ -78,7 +78,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                     mediaPlayer.stop();
                     mediaPlayer.release();
                     btnPlay.setImageResource(R.drawable.play);
-                    imgDics.clearAnimation();
+                    imgDisc.clearAnimation();
                     createMediaPlayer();
                 }
                 else if(activityrequest == 1)
@@ -86,7 +86,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                     mediaPlayer.seekTo(0);
                     mediaPlayer.pause();
                     btnPlay.setImageResource(R.drawable.play);
-                    imgDics.clearAnimation();
+                    imgDisc.clearAnimation();
                 }
 
             }
@@ -119,7 +119,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 createMediaPlayer();
                 mediaPlayer.start();
                 btnPlay.setImageResource(R.drawable.pause);
-                imgDics.startAnimation(anim_dics);
+                imgDisc.startAnimation(anim_disc);
             }
         });
 
@@ -147,7 +147,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 createMediaPlayer();
                 mediaPlayer.start();
                 btnPlay.setImageResource(R.drawable.pause);
-                imgDics.startAnimation(anim_dics);
+                imgDisc.startAnimation(anim_disc);
             }
         });
 
@@ -223,7 +223,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     protected void onStart()
     {
         super.onStart();
-        anim_dics = AnimationUtils.loadAnimation(this, R.anim.dics_rotate);
+        anim_disc = AnimationUtils.loadAnimation(this, R.anim.disc_rotate);
         if(activityrequest == 1)
         {
             if(mediaPlayer.isPlaying()== true)
@@ -242,7 +242,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                     public void onPrepared(MediaPlayer mp) {
                         mp.start();
                         btnPlay.setImageResource(R.drawable.pause);
-                        imgDics.startAnimation(anim_dics);
+                        imgDisc.startAnimation(anim_disc);
                         btnPlay.setImageResource(R.drawable.pause);
                         setTime();
                         updateTime();
@@ -274,7 +274,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             {
                 createMediaPlayer();
                 mediaPlayer.start();
-                imgDics.startAnimation(anim_dics);
+                imgDisc.startAnimation(anim_disc);
                 btnPlay.setImageResource(R.drawable.pause);
             }
         }
@@ -283,7 +283,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             if(mediaPlayer.isPlaying()==true)
             {
                 btnPlay.setImageResource(R.drawable.pause);
-                imgDics.startAnimation(anim_dics);
+                imgDisc.startAnimation(anim_disc);
             }
             //Restore loop button
             if(mediaPlayer.isLooping()==true)
@@ -355,7 +355,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                             indexSong = 0;
                             createMediaPlayer();
                             btnPlay.setImageResource(R.drawable.play);
-                            imgDics.clearAnimation();
+                            imgDisc.clearAnimation();
                         }
                         else if((indexSong>arraySong.size()-1)&&loopall==true)
                         {
@@ -421,7 +421,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnRandom = (ImageButton) findViewById(R.id.btn_random);
         btnLoop = (ImageButton) findViewById(R.id.btn_loop);
 
-        imgDics = (ImageView) findViewById(R.id.img_Dics);
+        imgDisc = (ImageView) findViewById(R.id.img_Disc);
 
         //btnSignIn= (SignInButton) findViewById(R.id.sign_in_button_gg);
 
