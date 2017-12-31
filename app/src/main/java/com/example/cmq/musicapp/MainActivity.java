@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
     private static final int REQUEST_CODE_OPEN_ITEM = 300;
     static MediaPlayer mediaPlayer = new MediaPlayer() ;
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
+    static String title;
     TextView tvUserName;
     ImageView imgUserImg;
     SignInButton signInButton;
@@ -191,10 +192,18 @@ public class MainActivity extends Activity {
                 Log.w(TAG, "SignOut Success!");
                 signed = false;
                 signInButton.setVisibility(View.VISIBLE);
+                signOutButton.setVisibility(View.GONE);
                 imgUserImg.setImageResource(R.drawable.default_ava);
                 tvUserName.setText("");
             }
         });
+    }
+    public void imgMusic_OnClick(View view)
+    {
+        Intent resmumeMusic = new Intent(getApplicationContext(),PlayMusicActivity.class);
+        resmumeMusic.putExtra(getString(R.string.streamMusicrequest),2);
+        resmumeMusic.putExtra(getString(R.string.songtitle),title);
+        startActivity(resmumeMusic);
     }
     //Get Drive PlayList
     //--------------------------------------------------------------------------

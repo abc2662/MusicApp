@@ -30,41 +30,28 @@ public class PlayMusicActivity extends AppCompatActivity {
     SeekBar sbProcess;
     ImageButton btnPrev, btnPlay, btnNext, btnStop, btnRandom, btnLoop;
     ImageView imgDics;
-    ArrayList<Song> arraySong = new ArrayList<Song>();
-    ArrayList<Song> shuffleArraysong = new ArrayList<>();
-    ArrayList<Song> temparraySong = new ArrayList<Song>();
-    int indexSong=0;
+    static ArrayList<Song> arraySong = new ArrayList<Song>();
+    static ArrayList<Song> shuffleArraysong = new ArrayList<>();
+    static ArrayList<Song> temparraySong = new ArrayList<Song>();
+    static int indexSong=0;
+    static String title;
     static MediaPlayer mediaPlayer = new MediaPlayer() ;
     String musicLink;
-    String title;
     Animation anim_dics;
-    boolean loopall =  false;
-    boolean shuffle = false;
+    static boolean loopall =  false;
+    static boolean shuffle = false;
     public int activityrequest;
+    Intent musiclinkIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_music);
-        if(mediaPlayer.isPlaying()== true)
-        {
-            mediaPlayer.stop();
-        }
         String TAG =  "onCreate: ";
         Log.i(TAG, "Current onCreate");
-        Intent musiclinkIntent = getIntent();
+        musiclinkIntent = getIntent();
         createPlayList();
         InitComp();
         activityrequest = musiclinkIntent.getIntExtra(getString(R.string.streamMusicrequest),0);
-
-
-        musicLink = musiclinkIntent.getStringExtra(getString(R.string.musiclinkdata));
-        try{
-            title = musiclinkIntent.getStringExtra(getString(R.string.songtitle));
-        }
-        catch (Exception e)
-        {
-            Log.w("OnDrive","Playlist");
-        }
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,7 +73,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(activityrequest == 0)
+                if(activityrequest == 0 ||activityrequest == 2 )
                 {
                     mediaPlayer.stop();
                     mediaPlayer.release();
@@ -117,6 +104,8 @@ public class PlayMusicActivity extends AppCompatActivity {
 //                 mediaPlayer.seekTo(0);
 //                 return;
 //                }
+                if(activityrequest == 1)
+                return;
                 indexSong++;
                 if (indexSong > arraySong.size() - 1) {
                     indexSong = 0;
@@ -237,6 +226,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         anim_dics = AnimationUtils.loadAnimation(this, R.anim.dics_rotate);
         if(activityrequest == 1)
         {
+            if(mediaPlayer.isPlaying()== true)
+            {
+                mediaPlayer.stop();
+            }
+            UpdateUI();
             try {
                 mediaPlayer.reset();
                 mediaPlayer.setDataSource(musicLink);
@@ -261,7 +255,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
         else if(activityrequest == 0)
         {
-
+            if(mediaPlayer.isPlaying()== true)
+            {
+                mediaPlayer.stop();
+            }
+            UpdateUI();
             Log.w("getLink",arraySong.get(indexSong).getLink());
             Log.w("musicLink",musicLink);
             while(!arraySong.get(indexSong).getLink().equals(musicLink))
@@ -280,8 +278,55 @@ public class PlayMusicActivity extends AppCompatActivity {
                 btnPlay.setImageResource(R.drawable.pause);
             }
         }
+        else if(activityrequest == 2)
+        {
+            if(mediaPlayer.isPlaying()==true)
+            {
+                btnPlay.setImageResource(R.drawable.pause);
+                imgDics.startAnimation(anim_dics);
+            }
+            //Restore loop button
+            if(mediaPlayer.isLooping()==true)
+            {
+                btnLoop.setImageResource(R.drawable.replay_loop);
+                loopall = false;
+            }
+            else if(loopall == false && mediaPlayer.isLooping()==false)
+            {
+                btnLoop.setImageResource(R.drawable.replay);
+            }
+            else if(loopall ==  true)
+            {
+                btnLoop.setImageResource(R.drawable.replay_selected);
+            }
+            //Restore shuffle button
+            if(shuffle == true)
+            {
+                btnRandom.setImageResource(R.drawable.shuffle_selected);
+            }
+            txtTitle.setText(arraySong.get(indexSong).getTitle());
+            setTime();
+            updateTime();
+        }
 
 
+    }
+    public void UpdateUI()
+    {
+        try {
+            musicLink = musiclinkIntent.getStringExtra(getString(R.string.musiclinkdata));
+        }
+        catch(Exception e)
+        {
+            Log.v("OnResume","Music");
+        }
+        try{
+            title = musiclinkIntent.getStringExtra(getString(R.string.songtitle));
+        }
+        catch (Exception e)
+        {
+            Log.w("OnDrive","Playlist");
+        }
     }
     @Override
     protected void onDestroy() {

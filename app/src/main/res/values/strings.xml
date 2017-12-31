@@ -8,6 +8,7 @@
     <string name="title_activity_pick">PickActivity</string>
     <string name="musiclinkdata">musicLinkExtra</string>
     <string name="songtitle">songtitle</string>
+    <string name="resumeMusicrequest">resumeMusicrequest</string>
     <string name="streamMusicrequest">streamMusicrequest</string>
     <string name="playMusicrequest">playMusicrequest</string>
     <string name="large_text">
