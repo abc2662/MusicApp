@@ -69,32 +69,6 @@ public class PlayMusicActivity extends AppCompatActivity {
 
 
         //--------------------------------------------------//
-        //Stop Button Event
-        btnStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(activityrequest == 0 ||activityrequest == 2 )
-                {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    btnPlay.setImageResource(R.drawable.play);
-                    imgDisc.clearAnimation();
-                    createMediaPlayer();
-                }
-                else if(activityrequest == 1)
-                {
-                    mediaPlayer.seekTo(0);
-                    mediaPlayer.pause();
-                    btnPlay.setImageResource(R.drawable.play);
-                    imgDisc.clearAnimation();
-                }
-
-            }
-        });
-
-
-
-        //--------------------------------------------------//
         //Next Button Event
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
