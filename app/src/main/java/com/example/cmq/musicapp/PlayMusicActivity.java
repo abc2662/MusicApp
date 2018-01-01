@@ -179,8 +179,6 @@ public class PlayMusicActivity extends AppCompatActivity {
             });
             ;
 
-            /* Start the mediaPlayer */
-            mediaPlayer.start();
         } catch (IOException e) {
             Toast.makeText(this, "Unexpected error: File path not found.", Toast.LENGTH_LONG).show();
         } catch (IllegalStateException e) {
@@ -274,7 +272,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 
                 if (++songIndex >= songList.size()) {
                     songIndex = 0;
-                    mediaPlayer.reset();
+                    //mediaPlayer.reset();
                     playMusic(findSongIndex());
 
 
@@ -297,10 +295,6 @@ public class PlayMusicActivity extends AppCompatActivity {
 //                }
                 if (--songIndex < 0) {
                     songIndex = songList.size() - 1;
-
-                    if (!loopAll)
-                        stopMusic();
-                    else
                         playMusic(findSongIndex());
                 } else {
                     playMusic(findSongIndex());
