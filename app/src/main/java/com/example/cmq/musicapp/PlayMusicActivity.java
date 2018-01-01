@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,21 +37,14 @@ public class PlayMusicActivity extends AppCompatActivity {
         public static final int RESUME = 2;
     }
 
-    private ArrayList<Song> songList;
-    private int indexSong = 0;
-
-    static ArrayList<Song> arraySong = new ArrayList<Song>();
-    static ArrayList<Song> shuffleArraysong = new ArrayList<>();
-    static ArrayList<Song> temparraySong = new ArrayList<Song>();
-
-    static String title;
     static MediaPlayer mediaPlayer = new MediaPlayer();
-    String musicLink;
-    AnimatorSet anim_disc;
-    static boolean loopall = false;
-    static boolean shuffle = false;
+
+    private ArrayList<Song> songList;
+    private ArrayList<Integer> shuffleIndices;
+    private int songIndex = 0;
+    private static boolean loopall = false;
+    private static boolean shuffle = false;
     public int activityrequest;
-    Intent musiclinkIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +59,10 @@ public class PlayMusicActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        musiclinkIntent = getIntent();
+        Intent musiclinkIntent = getIntent();
         activityrequest = musiclinkIntent.getIntExtra(MESSAGE.PLAY_MUSIC_REQUEST, Options.DEFAULT);
         songList = musiclinkIntent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
-        indexSong = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
+        songIndex = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
 
         if (songList.size() <= 1) {
             btnNext.setEnabled(false);
@@ -83,17 +75,17 @@ public class PlayMusicActivity extends AppCompatActivity {
         switch (activityrequest) {
             case Options.STREAM: {
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                playMusic(indexSong);
+                playMusic(songIndex);
                 break;
             }
             case Options.DEFAULT: {
-                playMusic(indexSong);
+                playMusic(songIndex);
                 break;
             }
             case Options.RESUME: {
                 if (mediaPlayer.isPlaying() == true) {
                     btnPlay.setImageResource(R.drawable.pause);
-                    //imgDisc.startAnimation(anim_disc);
+                    anim_disc.start();
                 }
                 //Restore loop button
                 if (mediaPlayer.isLooping() == true) {
@@ -108,7 +100,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 if (shuffle == true) {
                     btnShuffle.setImageResource(R.drawable.shuffle_selected);
                 }
-                txtTitle.setText(arraySong.get(indexSong).Title);
+                //txtTitle.setText(arraySong.get(songIndex).Title);
                 setTime();
                 updateTime();
                 break;
@@ -116,12 +108,6 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mediaPlayer.stop();
-        mediaPlayer.release();
-    }
 
     public void UpdateUI() {
 //        try {
@@ -135,7 +121,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 //            Log.w("OnDrive", "Playlist");
 //        }
 
-        txtTitle.setText(songList.get(indexSong).Title);
+        txtTitle.setText(songList.get(songIndex).Title);
         setTime();
         updateTime();
     }
@@ -166,45 +152,28 @@ public class PlayMusicActivity extends AppCompatActivity {
             return;
         }
 
-        mediaPlayer = MediaPlayer.create(PlayMusicActivity.this, Uri.parse(songList.get(indexSong).Link));
+        mediaPlayer = MediaPlayer.create(PlayMusicActivity.this, Uri.parse(songList.get(songIndex).Link));
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                indexSong++;
-                if ((indexSong >= arraySong.size()) && loopall == false) {
-                    stopMusic();
-                } else if ((indexSong >= arraySong.size()) && loopall == true) {
-                    playMusic(0);
-                } else {
-                    createMediaPlayer();
-                    mediaPlayer.start();
-                    btnPlay.setImageResource(R.drawable.pause);
-                }
+                btnNext.callOnClick();
             }
         });
     }
 
-    public void AddSongs(ArrayList<Song> arraylistSong) {
-        arraySong = arraylistSong;
-    }
-
     public void playMusic() {
         if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
+            stopMusic();
         }
-
-        mediaPlayer.reset();
-        anim_disc.end();
 
         try {
             /* load the new source */
-            mediaPlayer.setDataSource(songList.get(indexSong).Link);
+            mediaPlayer.setDataSource(songList.get(songIndex).Link);
             /* Prepare the mediaPlayer */
             mediaPlayer.prepare();
             /* Start the mediaPlayer */
             mediaPlayer.start();
-            anim_disc.setDuration(mediaPlayer.getDuration());
         } catch (IOException e) {
             Toast.makeText(this, "Unexpected error: File path not found.", Toast.LENGTH_LONG).show();
         } catch (IllegalStateException e) {
@@ -218,21 +187,41 @@ public class PlayMusicActivity extends AppCompatActivity {
 
     public void playMusic(int index) {
         if (index >= 0 && index < songList.size()) {
-            indexSong = index;
             playMusic();
         }
     }
 
     public void stopMusic() {
-        mediaPlayer.stop();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        } else {
+            return;
+        }
+
+        mediaPlayer.reset();
         btnPlay.setImageResource(R.drawable.play);
         anim_disc.end();
+    }
+
+    public void shuffleSongList() {
+        shuffleIndices.clear();
+        for (int i = 0; i < songList.size(); i++)
+            shuffleIndices.add(i);
+        Collections.shuffle(shuffleIndices);
+    }
+
+    private int findSongIndex() {
+        if (!shuffle)
+            return songIndex;
+        else
+            return shuffleIndices.get(songIndex);
     }
 
     TextView txtTitle, txtTimeProcess, txtTimeTotal;
     SeekBar sbProcess;
     ImageButton btnPrev, btnPlay, btnNext, btnShuffle, btnLoop;
     ImageView imgDisc;
+    AnimatorSet anim_disc;
 
     private void initalizeComponents() {
         txtTitle = (TextView) findViewById(R.id.txt_TitleSong);
@@ -248,6 +237,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 
         anim_disc = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.disc_rotation);
         anim_disc.setTarget(imgDisc);
+        anim_disc.start();
 
         //--------------------------------------------------//
         //Play Button Event
@@ -279,11 +269,17 @@ public class PlayMusicActivity extends AppCompatActivity {
 //                 mediaPlayer.seekTo(0);
 //                 return;
 //                }
-                if (++indexSong >= arraySong.size()) {
-                    indexSong = 0;
-                }
 
-                playMusic();
+                if (++songIndex >= songList.size()) {
+                    songIndex = 0;
+
+                    if (!loopall)
+                        stopMusic();
+                    else
+                        playMusic(findSongIndex());
+                } else {
+                    playMusic(findSongIndex());
+                }
             }
         });
 
@@ -298,11 +294,16 @@ public class PlayMusicActivity extends AppCompatActivity {
 //                    mediaPlayer.seekTo(0);
 //                    return;
 //                }
-                if (--indexSong < 0) {
-                    indexSong = arraySong.size() - 1;
-                }
+                if (--songIndex < 0) {
+                    songIndex = songList.size() - 1;
 
-                playMusic();
+                    if (!loopall)
+                        stopMusic();
+                    else
+                        playMusic(findSongIndex());
+                } else {
+                    playMusic(findSongIndex());
+                }
             }
         });
 
@@ -337,7 +338,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                     btnLoop.setImageResource(R.drawable.replay_selected);
                     mediaPlayer.setLooping(false);
                     loopall = true;
-                } else if (loopall == true) {
+                } else if (loopall) {
                     btnLoop.setImageResource(R.drawable.replay_loop);
                     loopall = false;
                     mediaPlayer.setLooping(true);
@@ -355,13 +356,9 @@ public class PlayMusicActivity extends AppCompatActivity {
                 if (!shuffle) {
                     btnShuffle.setImageResource(R.drawable.shuffle_selected);
                     shuffle = true;
-                    shuffleArraysong = arraySong;
-                    Collections.shuffle(shuffleArraysong);
-                    temparraySong = arraySong;
-                    arraySong = shuffleArraysong;
+                    shuffleSongList();
                 } else {
                     btnShuffle.setImageResource(R.drawable.shuffle);
-                    arraySong = temparraySong;
                     shuffle = false;
                 }
             }

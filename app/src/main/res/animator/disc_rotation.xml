@@ -8,5 +8,6 @@
         android:valueFrom="0f"
         android:valueTo="360f"
         android:valueType="floatType"
-        android:repeatCount="infinite"/>
+        android:repeatCount="infinite"
+        android:duration="10000"/>
 </set>
