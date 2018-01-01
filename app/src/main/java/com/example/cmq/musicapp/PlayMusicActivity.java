@@ -77,6 +77,8 @@ public class PlayMusicActivity extends AppCompatActivity {
         switch (activityRequest) {
             case Options.STREAM: {
                 getPlayList();
+                btnNext.setEnabled(false);
+                btnPrev.setEnabled(false);
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 playMusic(0);
                 break;
