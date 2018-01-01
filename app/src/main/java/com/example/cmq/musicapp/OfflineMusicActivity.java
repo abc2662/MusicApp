@@ -49,7 +49,6 @@ public class OfflineMusicActivity extends AppCompatActivity {
     public String[] Paths;
     public String[] Titles;
     public SearchView searchView;
-
     static MediaPlayer mediaPlayer = new MediaPlayer() ;
     ArrayList<Song> arraySong = new ArrayList<Song>();
     @Override

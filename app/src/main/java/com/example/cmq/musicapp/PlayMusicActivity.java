@@ -390,7 +390,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 
         btnPrev = (ImageButton) findViewById(R.id.btn_prev);
         btnPlay = (ImageButton) findViewById(R.id.btn_play);
-        btnStop = (ImageButton) findViewById(R.id.btn_stop);
+
         btnNext = (ImageButton) findViewById(R.id.btn_next);
         btnRandom = (ImageButton) findViewById(R.id.btn_random);
         btnLoop = (ImageButton) findViewById(R.id.btn_loop);
