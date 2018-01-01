@@ -52,7 +52,6 @@ public class PlayMusicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_play_music);
         musiclinkIntent = getIntent();
         activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
-        createMediaPlayer();
         initializeComponents();
     }
     private void getPlayList()
@@ -73,12 +72,14 @@ public class PlayMusicActivity extends AppCompatActivity {
         switch (activityRequest) {
             case Options.STREAM: {
                 getPlayList();
+                createMediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                playMusic(songIndex);
+                playMusic(0);
                 break;
             }
             case Options.DEFAULT: {
                 getPlayList();
+                createMediaPlayer();
                 playMusic(songIndex);
                 break;
             }
@@ -171,7 +172,6 @@ public class PlayMusicActivity extends AppCompatActivity {
             try {
                 /* load the new source */
                 mediaPlayer.setDataSource(songList.get(index).Link);
-
                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer player) {
