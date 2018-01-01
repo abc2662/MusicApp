@@ -37,13 +37,21 @@ public class PlayMusicActivity extends AppCompatActivity {
         public static final int RESUME = 2;
     }
 
+    public static final class RepeatOptions {
+        public static final int NO_REPEAT = 0;
+        public static final int REPEAT_ALL = 1;
+        public static final int REPEAT_ONE = 2;
+
+        public static final int Count = 3;
+    }
+
     static MediaPlayer mediaPlayer = new MediaPlayer();
 
     public static ArrayList<Song> songList;
     public static ArrayList<Integer> shuffleIndices = new ArrayList<>();
     public static int songIndex = 0;
-    public static boolean loopAll = false;
     public static boolean shuffle = false;
+    public static int repeatOption = 0;
     public int activityRequest;
     public Intent musiclinkIntent;
 
@@ -80,23 +88,29 @@ public class PlayMusicActivity extends AppCompatActivity {
             }
             case Options.RESUME: {
                 txtTitle.setText(songList.get(songIndex).Title);
-                if (mediaPlayer.isPlaying() == true) {
+                if (mediaPlayer.isPlaying()) {
                     btnPlay.setImageResource(R.drawable.pause);
                     anim_disc.start();
                 }
+
                 //Restore loop button
-                if (mediaPlayer.isLooping() == true) {
-                    btnLoop.setImageResource(R.drawable.replay_loop);
-                    loopAll = false;
-                } else if (loopAll == false && mediaPlayer.isLooping() == false) {
-                    btnLoop.setImageResource(R.drawable.replay);
-                } else if (loopAll == true) {
-                    btnLoop.setImageResource(R.drawable.replay_selected);
+                switch (repeatOption) {
+                    case RepeatOptions.REPEAT_ONE:
+                        btnLoop.setImageResource(R.drawable.replay_loop);
+                        break;
+                    case RepeatOptions.NO_REPEAT:
+                        btnLoop.setImageResource(R.drawable.replay);
+                        break;
+                    case RepeatOptions.REPEAT_ALL:
+                        btnLoop.setImageResource(R.drawable.replay_selected);
+                        break;
                 }
+
                 //Restore shuffle button
-                if (shuffle == true) {
+                if (shuffle) {
                     btnShuffle.setImageResource(R.drawable.shuffle_selected);
                 }
+
                 setTime();
                 updateTime();
                 break;
@@ -187,8 +201,24 @@ public class PlayMusicActivity extends AppCompatActivity {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                if (!mp.isLooping() || loopAll)
-                    btnNext.callOnClick();
+                switch (repeatOption)
+                {
+                    case RepeatOptions.NO_REPEAT: {
+                        if (songIndex == songList.size() - 1) {
+                            anim_disc.pause();
+                        }
+                        else
+                            btnNext.callOnClick();
+                        break;
+                    }
+                    case RepeatOptions.REPEAT_ALL: {
+                        btnNext.callOnClick();
+                        break;
+                    }
+                    case RepeatOptions.REPEAT_ONE: {
+                        break;
+                    }
+                }
             }
         });
         btnPlay.setImageResource(R.drawable.play);
@@ -208,6 +238,27 @@ public class PlayMusicActivity extends AppCompatActivity {
             return songIndex;
         else
             return shuffleIndices.get(songIndex);
+    }
+
+    public void changeRepeatOption(int index) {
+        switch (repeatOption)
+        {
+            case RepeatOptions.NO_REPEAT: {
+                btnLoop.setImageResource(R.drawable.replay);
+                mediaPlayer.setLooping(false);
+                break;
+            }
+            case RepeatOptions.REPEAT_ALL: {
+                btnLoop.setImageResource(R.drawable.replay_selected);
+                mediaPlayer.setLooping(false);
+                break;
+            }
+            case RepeatOptions.REPEAT_ONE: {
+                btnLoop.setImageResource(R.drawable.replay_loop);
+                mediaPlayer.setLooping(true);
+                break;
+            }
+        }
     }
 
     TextView txtTitle, txtTimeProcess, txtTimeTotal;
@@ -306,19 +357,8 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnLoop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mediaPlayer.isLooping() && !loopAll) {
-                    btnLoop.setImageResource(R.drawable.replay_selected);
-                    mediaPlayer.setLooping(false);
-                    loopAll = true;
-                } else if (loopAll) {
-                    btnLoop.setImageResource(R.drawable.replay_loop);
-                    loopAll = false;
-                    mediaPlayer.setLooping(true);
-                } else if (!loopAll && mediaPlayer.isLooping()) {
-                    btnLoop.setImageResource(R.drawable.replay);
-                    mediaPlayer.setLooping(false);
-                    loopAll = false;
-                }
+                repeatOption = (repeatOption + 1) % RepeatOptions.Count;
+                changeRepeatOption(repeatOption);
             }
         });
 
