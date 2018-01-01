@@ -70,11 +70,6 @@ public class PlayMusicActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-
-
-
-
         switch (activityRequest) {
             case Options.STREAM: {
                 getPlayList();
@@ -92,7 +87,6 @@ public class PlayMusicActivity extends AppCompatActivity {
                     btnPlay.setImageResource(R.drawable.pause);
                     anim_disc.start();
                 }
-                txtTitle.setText(songList.get(songIndex).Title);
                 //Restore loop button
                 if (mediaPlayer.isLooping() == true) {
                     btnLoop.setImageResource(R.drawable.replay_loop);
