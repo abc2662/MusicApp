@@ -69,6 +69,8 @@ public class PlayMusicActivity extends AppCompatActivity {
         switch (activityRequest) {
             case Options.STREAM: {
                 getPlayList();
+                btnNext.setEnabled(false);
+                btnPrev.setEnabled(false);
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 playMusic(0);
                 break;
@@ -187,8 +189,9 @@ public class PlayMusicActivity extends AppCompatActivity {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                if (!mp.isLooping() || loopAll)
+                if (!mp.isLooping() || loopAll) {
                     btnNext.callOnClick();
+                }
             }
         });
         btnPlay.setImageResource(R.drawable.play);
