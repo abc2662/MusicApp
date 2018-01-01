@@ -113,8 +113,9 @@ public class OfflineMusicActivity extends AppCompatActivity {
         String localMusicPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
         Log.w("Files", "Path: " + localMusicPath);
         File directory = new File(localMusicPath);
-        if (directory.listFiles(new FileExtensionFilter()).length > 0) {
-            for (File file : directory.listFiles()) {
+        File[] files = directory.listFiles(new FileExtensionFilter());
+        if (files.length > 0) {
+            for (File file : files) {
                 String link = file.getPath();
                 //String title = file.getName().substring(0, (file.getName().length() - 4));
                 //Deal with metadata ở đây
