@@ -39,42 +39,51 @@ public class PlayMusicActivity extends AppCompatActivity {
 
     static MediaPlayer mediaPlayer = new MediaPlayer();
 
-    private ArrayList<Song> songList;
-    private ArrayList<Integer> shuffleIndices;
-    private int songIndex = 0;
+    public static ArrayList<Song> songList;
+    public static ArrayList<Integer> shuffleIndices = new ArrayList<>();
+    public static int songIndex = 0;
     public static boolean loopAll = false;
     public static boolean shuffle = false;
     public int activityRequest;
-
+    public Intent musiclinkIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_music);
-
+        musiclinkIntent = getIntent();
+        activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
         createMediaPlayer();
         initializeComponents();
     }
-
+    private void getPlayList()
+    {
+        songList = musiclinkIntent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
+        songIndex = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
+        if (songList.size() <= 1) {
+            btnNext.setEnabled(false);
+            btnPrev.setEnabled(false);
+        } else {
+            btnNext.setEnabled(true);
+            btnPrev.setEnabled(true);
+        }
+    }
     @Override
     protected void onStart() {
         super.onStart();
-
-        Intent musiclinkIntent = getIntent();
-        activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
-        songList = musiclinkIntent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
-        songIndex = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
-
         switch (activityRequest) {
             case Options.STREAM: {
+                getPlayList();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 playMusic(songIndex);
                 break;
             }
             case Options.DEFAULT: {
+                getPlayList();
                 playMusic(songIndex);
                 break;
             }
             case Options.RESUME: {
+                txtTitle.setText(songList.get(songIndex).Title);
                 if (mediaPlayer.isPlaying() == true) {
                     btnPlay.setImageResource(R.drawable.pause);
                     anim_disc.start();
@@ -92,7 +101,6 @@ public class PlayMusicActivity extends AppCompatActivity {
                 if (shuffle == true) {
                     btnShuffle.setImageResource(R.drawable.shuffle_selected);
                 }
-                //txtTitle.setText(arraySong.get(songIndex).Title);
                 setTime();
                 updateTime();
                 break;
@@ -197,6 +205,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     public void shuffleSongList() {
+        if(shuffleIndices != null)
         shuffleIndices.clear();
         for (int i = 0; i < songList.size(); i++)
             shuffleIndices.add(i);
