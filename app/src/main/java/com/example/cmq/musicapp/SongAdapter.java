@@ -31,10 +31,12 @@ public class SongAdapter extends ArrayAdapter<Song> {
         TextView itemTitle = (TextView) convertView.findViewById(R.id.itemTitle);
         TextView itemArtist = (TextView) convertView.findViewById(R.id.itemArtist);
         ImageView itemImage = (ImageView) convertView.findViewById(R.id.itemImage);
+
         // Populate the data into the template view using the data object
         itemTitle.setText(song.Title);
         itemArtist.setText(song.Artist);
         // TODO: Set itemImage 's image to album cover...
+
         // Return the completed view to render on screen
         return convertView;
     }

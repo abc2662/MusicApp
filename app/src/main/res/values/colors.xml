@@ -13,7 +13,7 @@
     <color name="colorSelected">#ff00a7</color>
     <color name="colorText2">#2541b2</color>
     <!--Palette Color-->
-    <color name="colorGray">#CCC</color>
+    <color name="colorGray">#cccccc</color>
     <color name="colorLowestDark">#414a4c</color>
     <color name="colorLowerDark">#3b444b</color>
     <color name="colorDark">#353839</color>
@@ -22,6 +22,6 @@
 
     <!--Basic Color-->
     <color name="colorWhite">#FFF</color>
-    <color name="colorBlack">#000</color>
+    <color name="colorBlack">#000000</color>
 
 </resources>
