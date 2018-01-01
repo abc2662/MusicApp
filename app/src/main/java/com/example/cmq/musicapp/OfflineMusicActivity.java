@@ -21,9 +21,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 
-/**
- * Created by Admin on 12/3/2017.
- */
 
 public class OfflineMusicActivity extends AppCompatActivity {
     private SearchView searchView;
