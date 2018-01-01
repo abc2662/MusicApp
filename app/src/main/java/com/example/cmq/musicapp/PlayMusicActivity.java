@@ -46,40 +46,35 @@ public class PlayMusicActivity extends AppCompatActivity {
     public static boolean shuffle = false;
     public int activityRequest;
     public Intent musiclinkIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_music);
-        musiclinkIntent = getIntent();
-        activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
+        createMediaPlayer();
         initializeComponents();
     }
     private void getPlayList()
     {
         songList = musiclinkIntent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
         songIndex = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
-        if (songList.size() <= 1) {
-            btnNext.setEnabled(false);
-            btnPrev.setEnabled(false);
-        } else {
-            btnNext.setEnabled(true);
-            btnPrev.setEnabled(true);
-        }
     }
     @Override
     protected void onStart() {
         super.onStart();
+
+        musiclinkIntent = getIntent();
+        activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
+
         switch (activityRequest) {
             case Options.STREAM: {
                 getPlayList();
-                createMediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 playMusic(0);
                 break;
             }
             case Options.DEFAULT: {
                 getPlayList();
-                createMediaPlayer();
                 playMusic(songIndex);
                 break;
             }
@@ -154,33 +149,15 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
 
         mediaPlayer = MediaPlayer.create(PlayMusicActivity.this, Uri.parse(songList.get(songIndex).Link));
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                btnNext.callOnClick();
-            }
-        });
     }
 
     public void playMusic(int index) {
         if (index >= 0 && index < songList.size()) {
-            if (mediaPlayer.isPlaying()) {
-                stopMusic();
-            }
+            stopMusic();
 
             try {
                 /* load the new source */
                 mediaPlayer.setDataSource(songList.get(index).Link);
-                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer player) {
-                        player.start();
-                        UpdateUI();
-                        btnPlay.setImageResource(R.drawable.pause);
-                        anim_disc.start();
-                    }
-                });
 
                 /* Prepare the mediaPlayer */
                 mediaPlayer.prepareAsync();
@@ -195,11 +172,25 @@ public class PlayMusicActivity extends AppCompatActivity {
     public void stopMusic() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
-        } else {
-            return;
         }
 
         mediaPlayer.reset();
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer player) {
+                player.start();
+                UpdateUI();
+                btnPlay.setImageResource(R.drawable.pause);
+                anim_disc.start();
+            }
+        });
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                if (!mp.isLooping() || loopAll)
+                    btnNext.callOnClick();
+            }
+        });
         btnPlay.setImageResource(R.drawable.play);
         anim_disc.end();
     }
