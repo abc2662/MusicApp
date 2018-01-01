@@ -40,7 +40,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     static MediaPlayer mediaPlayer = new MediaPlayer();
 
     public static ArrayList<Song> songList;
-    private ArrayList<Integer> shuffleIndices;
+    public static ArrayList<Integer> shuffleIndices = new ArrayList<>();
     public static int songIndex = 0;
     public static boolean loopAll = false;
     public static boolean shuffle = false;
@@ -205,6 +205,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     public void shuffleSongList() {
+        if(shuffleIndices != null)
         shuffleIndices.clear();
         for (int i = 0; i < songList.size(); i++)
             shuffleIndices.add(i);
