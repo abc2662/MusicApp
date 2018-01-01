@@ -64,6 +64,8 @@ public class MainActivity extends Activity {
 
         if (account != null) {
             signedIn = true;
+            signInButton.setVisibility(View.GONE);
+            signOutButton.setVisibility(View.VISIBLE);
             mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
             mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), account);
             tvUserName.setText(account.getDisplayName());
@@ -99,6 +101,8 @@ public class MainActivity extends Activity {
                         Log.w(TAG, "sigInResult: Success");
                         signedIn = true;
                         tvUserName.setText(account.getDisplayName());
+                        signInButton.setVisibility(View.GONE);
+                        signOutButton.setVisibility(View.VISIBLE);
                         Log.w("URI", account.getPhotoUrl().toString());
                         Picasso.with(getApplicationContext()).load(account.getPhotoUrl().toString()).into(imgUserImg);
                         //imgUserImg.setImageBitmap(loadBitmap(account.getPhotoUrl().toString()));
