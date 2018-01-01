@@ -172,8 +172,15 @@ public class PlayMusicActivity extends AppCompatActivity {
             mediaPlayer.setDataSource(songList.get(songIndex).Link);
             /* Prepare the mediaPlayer */
             mediaPlayer.prepare();
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                public void onPrepared(MediaPlayer player) {
+                    player.start();
+                }
+            });
+            ;
+
             /* Start the mediaPlayer */
-            mediaPlayer.start();
+            //mediaPlayer.start();
         } catch (IOException e) {
             Toast.makeText(this, "Unexpected error: File path not found.", Toast.LENGTH_LONG).show();
         } catch (IllegalStateException e) {
@@ -270,7 +277,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 //                 return;
 //                }
 
-                if (++songIndex >= songList.size()) {
+                if (++songIndex > songList.size()) {
                     songIndex = 0;
 
                     if (!loopAll)
