@@ -53,7 +53,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         musiclinkIntent = getIntent();
         activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
         createMediaPlayer();
-        initalizeComponents();
+        initializeComponents();
     }
     private void getPlayList()
     {
@@ -168,37 +168,33 @@ public class PlayMusicActivity extends AppCompatActivity {
         });
     }
 
-    public void playMusic() {
-        if (mediaPlayer.isPlaying()) {
-            stopMusic();
-        }
-
-        try {
-            /* load the new source */
-            mediaPlayer.setDataSource(songList.get(songIndex).Link);
-            /* Prepare the mediaPlayer */
-            mediaPlayer.prepare();
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                public void onPrepared(MediaPlayer player) {
-                    player.start();
-                }
-            });
-            ;
-
-        } catch (IOException e) {
-            Toast.makeText(this, "Unexpected error: File path not found.", Toast.LENGTH_LONG).show();
-        } catch (IllegalStateException e) {
-            Toast.makeText(this, "Unexpected error.", Toast.LENGTH_LONG).show();
-        }
-
-        UpdateUI();
-        btnPlay.setImageResource(R.drawable.pause);
-        anim_disc.start();
-    }
-
     public void playMusic(int index) {
         if (index >= 0 && index < songList.size()) {
-            playMusic();
+            if (mediaPlayer.isPlaying()) {
+                stopMusic();
+            }
+
+            try {
+                /* load the new source */
+                mediaPlayer.setDataSource(songList.get(index).Link);
+
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer player) {
+                        player.start();
+                        UpdateUI();
+                        btnPlay.setImageResource(R.drawable.pause);
+                        anim_disc.start();
+                    }
+                });
+
+                /* Prepare the mediaPlayer */
+                mediaPlayer.prepareAsync();
+            } catch (IOException e) {
+                Toast.makeText(this, "Unexpected error: File path not found.", Toast.LENGTH_LONG).show();
+            } catch (IllegalStateException e) {
+                Toast.makeText(this, "Unexpected error.", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -234,7 +230,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     ImageView imgDisc;
     AnimatorSet anim_disc;
 
-    private void initalizeComponents() {
+    private void initializeComponents() {
         txtTitle = (TextView) findViewById(R.id.txt_TitleSong);
         txtTimeProcess = (TextView) findViewById(R.id.txt_TimeProcess);
         txtTimeTotal = (TextView) findViewById(R.id.txt_TimeTotal);
@@ -275,16 +271,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (++songIndex >= songList.size()) {
                     songIndex = 0;
-                    //mediaPlayer.reset();
-                    playMusic(findSongIndex());
-
-
-                } else {
-                    playMusic(findSongIndex());
                 }
+
+                playMusic(findSongIndex());
             }
         });
 
@@ -294,17 +285,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(mediaPlayer.isLooping()==true)
-//                {
-//                    mediaPlayer.seekTo(0);
-//                    return;
-//                }
                 if (--songIndex < 0) {
                     songIndex = songList.size() - 1;
-                        playMusic(findSongIndex());
-                } else {
-                    playMusic(findSongIndex());
                 }
+
+                playMusic(findSongIndex());
             }
         });
 
