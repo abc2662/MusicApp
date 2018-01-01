@@ -39,9 +39,9 @@ public class PlayMusicActivity extends AppCompatActivity {
 
     static MediaPlayer mediaPlayer = new MediaPlayer();
 
-    private ArrayList<Song> songList;
+    public static ArrayList<Song> songList;
     private ArrayList<Integer> shuffleIndices;
-    private int songIndex = 0;
+    public static int songIndex = 0;
     public static boolean loopAll = false;
     public static boolean shuffle = false;
     public int activityRequest;
@@ -83,6 +83,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 break;
             }
             case Options.RESUME: {
+                txtTitle.setText(songList.get(songIndex).Title);
                 if (mediaPlayer.isPlaying() == true) {
                     btnPlay.setImageResource(R.drawable.pause);
                     anim_disc.start();
@@ -100,7 +101,6 @@ public class PlayMusicActivity extends AppCompatActivity {
                 if (shuffle == true) {
                     btnShuffle.setImageResource(R.drawable.shuffle_selected);
                 }
-                //txtTitle.setText(arraySong.get(songIndex).Title);
                 setTime();
                 updateTime();
                 break;
