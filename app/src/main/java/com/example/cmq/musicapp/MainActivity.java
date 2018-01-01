@@ -153,10 +153,10 @@ public class MainActivity extends Activity {
     }
 
     public void imgMusic_OnClick(View view) {
-//        Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-//        resumeMusicIntent.putExtra(MESSAGE.PLAY_MUSIC_REQUEST, PlayMusicActivity.Options.RESUME);
-//        resumeMusicIntent.putExtra(getString(R.string.songtitle), title);
-//        startActivity(resumeMusicIntent);
+        Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
+        resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_MUSIC_REQUEST, PlayMusicActivity.Options.RESUME);
+        //resumeMusicIntent.putExtra(getString(R.string.songtitle), title);
+        startActivity(resumeMusicIntent);
     }
 
     //Get Drive PlayList

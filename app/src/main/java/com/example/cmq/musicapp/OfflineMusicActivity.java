@@ -40,7 +40,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent playmusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-                playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.SONG_LIST, songList);
+                playmusicIntent.putParcelableArrayListExtra(PlayMusicActivity.MESSAGE.SONG_LIST, songList);
                 playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_INDEX, position);
                 playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_MUSIC_REQUEST, PlayMusicActivity.Options.DEFAULT);
                 startActivity(playmusicIntent);
