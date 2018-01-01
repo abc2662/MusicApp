@@ -45,25 +45,20 @@ public class PlayMusicActivity extends AppCompatActivity {
     public static boolean loopAll = false;
     public static boolean shuffle = false;
     public int activityRequest;
-
+    public Intent musiclinkIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_music);
-
+        musiclinkIntent = getIntent();
+        activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
         createMediaPlayer();
         initalizeComponents();
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Intent musiclinkIntent = getIntent();
-        activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
+    private void getPlayList()
+    {
         songList = musiclinkIntent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
         songIndex = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
-
         if (songList.size() <= 1) {
             btnNext.setEnabled(false);
             btnPrev.setEnabled(false);
@@ -71,14 +66,24 @@ public class PlayMusicActivity extends AppCompatActivity {
             btnNext.setEnabled(true);
             btnPrev.setEnabled(true);
         }
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+
+
 
         switch (activityRequest) {
             case Options.STREAM: {
+                getPlayList();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 playMusic(songIndex);
                 break;
             }
             case Options.DEFAULT: {
+                getPlayList();
                 playMusic(songIndex);
                 break;
             }
@@ -87,6 +92,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                     btnPlay.setImageResource(R.drawable.pause);
                     anim_disc.start();
                 }
+                txtTitle.setText(songList.get(songIndex).Title);
                 //Restore loop button
                 if (mediaPlayer.isLooping() == true) {
                     btnLoop.setImageResource(R.drawable.replay_loop);
