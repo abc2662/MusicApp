@@ -36,6 +36,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class MainActivity extends Activity {
     static String TAG = "OnActivity ";
 
@@ -152,7 +154,7 @@ public class MainActivity extends Activity {
 
     public void imgMusic_OnClick(View view) {
 //        Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-//        resumeMusicIntent.putExtra(getString(R.string.streamMusicrequest), 2);
+//        resumeMusicIntent.putExtra(MESSAGE.PLAY_MUSIC_REQUEST, PlayMusicActivity.Options.RESUME);
 //        resumeMusicIntent.putExtra(getString(R.string.songtitle), title);
 //        startActivity(resumeMusicIntent);
     }
@@ -229,13 +231,19 @@ public class MainActivity extends Activity {
                                 String link = metadata.getWebContentLink();
                                 String title = metadata.getTitle();
                                 String mimeType = metadata.getMimeType();
-                                Intent playmusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-                                playmusicIntent.putExtra(getString(R.string.musiclinkdata), link);
-                                playmusicIntent.putExtra(getString(R.string.songtitle), title);
-                                playmusicIntent.putExtra(getString(R.string.streamMusicrequest), 1);
+
                                 Log.w("Link", link);
                                 Log.w("MimeType", mimeType);
                                 Log.w("MimeType", metadata.getMimeType().toString());
+
+                                Song song = new Song(title, link);
+                                ArrayList<Song> songList = new ArrayList<Song>();
+                                songList.add(song);
+
+                                Intent playmusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
+                                playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.SONG_LIST, songList);
+                                playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_MUSIC_REQUEST, PlayMusicActivity.Options.STREAM);
+
                                 startActivity(playmusicIntent);
                                 //finish();
                             }
