@@ -14,10 +14,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.SimpleAdapter;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -42,7 +40,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 Intent playmusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
                 playmusicIntent.putParcelableArrayListExtra(PlayMusicActivity.MESSAGE.SONG_LIST, songList);
                 playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_INDEX, position);
-                playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_MUSIC_REQUEST, PlayMusicActivity.Options.DEFAULT);
+                playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.DEFAULT);
                 startActivity(playmusicIntent);
             }
 

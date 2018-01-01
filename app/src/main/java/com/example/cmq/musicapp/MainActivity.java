@@ -3,7 +3,6 @@ package com.example.cmq.musicapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -154,7 +153,7 @@ public class MainActivity extends Activity {
 
     public void imgMusic_OnClick(View view) {
         Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-        resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_MUSIC_REQUEST, PlayMusicActivity.Options.RESUME);
+        resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
         //resumeMusicIntent.putExtra(getString(R.string.songtitle), title);
         startActivity(resumeMusicIntent);
     }
@@ -242,7 +241,7 @@ public class MainActivity extends Activity {
 
                                 Intent playmusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
                                 playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.SONG_LIST, songList);
-                                playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_MUSIC_REQUEST, PlayMusicActivity.Options.STREAM);
+                                playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.STREAM);
 
                                 startActivity(playmusicIntent);
                                 //finish();

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 public class PlayMusicActivity extends AppCompatActivity {
     public static final class MESSAGE {
-        public static final String PLAY_MUSIC_REQUEST = "playMusicRequest";
+        public static final String ACTIVITY_REQUEST = "playMusicRequest";
         public static final String SONG_LIST = "songList";
         public static final String PLAY_INDEX = "playIndex";
     }
@@ -42,9 +42,9 @@ public class PlayMusicActivity extends AppCompatActivity {
     private ArrayList<Song> songList;
     private ArrayList<Integer> shuffleIndices;
     private int songIndex = 0;
-    private static boolean loopall = false;
-    private static boolean shuffle = false;
-    public int activityrequest;
+    public static boolean loopAll = false;
+    public static boolean shuffle = false;
+    public int activityRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         super.onStart();
 
         Intent musiclinkIntent = getIntent();
-        activityrequest = musiclinkIntent.getIntExtra(MESSAGE.PLAY_MUSIC_REQUEST, Options.DEFAULT);
+        activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
         songList = musiclinkIntent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
         songIndex = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
 
@@ -72,7 +72,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             btnPrev.setEnabled(true);
         }
 
-        switch (activityrequest) {
+        switch (activityRequest) {
             case Options.STREAM: {
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 playMusic(songIndex);
@@ -90,10 +90,10 @@ public class PlayMusicActivity extends AppCompatActivity {
                 //Restore loop button
                 if (mediaPlayer.isLooping() == true) {
                     btnLoop.setImageResource(R.drawable.replay_loop);
-                    loopall = false;
-                } else if (loopall == false && mediaPlayer.isLooping() == false) {
+                    loopAll = false;
+                } else if (loopAll == false && mediaPlayer.isLooping() == false) {
                     btnLoop.setImageResource(R.drawable.replay);
-                } else if (loopall == true) {
+                } else if (loopAll == true) {
                     btnLoop.setImageResource(R.drawable.replay_selected);
                 }
                 //Restore shuffle button
@@ -273,7 +273,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 if (++songIndex >= songList.size()) {
                     songIndex = 0;
 
-                    if (!loopall)
+                    if (!loopAll)
                         stopMusic();
                     else
                         playMusic(findSongIndex());
@@ -297,7 +297,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 if (--songIndex < 0) {
                     songIndex = songList.size() - 1;
 
-                    if (!loopall)
+                    if (!loopAll)
                         stopMusic();
                     else
                         playMusic(findSongIndex());
@@ -334,18 +334,18 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnLoop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mediaPlayer.isLooping() && !loopall) {
+                if (!mediaPlayer.isLooping() && !loopAll) {
                     btnLoop.setImageResource(R.drawable.replay_selected);
                     mediaPlayer.setLooping(false);
-                    loopall = true;
-                } else if (loopall) {
+                    loopAll = true;
+                } else if (loopAll) {
                     btnLoop.setImageResource(R.drawable.replay_loop);
-                    loopall = false;
+                    loopAll = false;
                     mediaPlayer.setLooping(true);
-                } else if (!loopall && mediaPlayer.isLooping()) {
+                } else if (!loopAll && mediaPlayer.isLooping()) {
                     btnLoop.setImageResource(R.drawable.replay);
                     mediaPlayer.setLooping(false);
-                    loopall = false;
+                    loopAll = false;
                 }
             }
         });
