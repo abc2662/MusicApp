@@ -64,14 +64,6 @@ public class PlayMusicActivity extends AppCompatActivity {
         songList = musiclinkIntent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
         songIndex = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
 
-        if (songList.size() <= 1) {
-            btnNext.setEnabled(false);
-            btnPrev.setEnabled(false);
-        } else {
-            btnNext.setEnabled(true);
-            btnPrev.setEnabled(true);
-        }
-
         switch (activityRequest) {
             case Options.STREAM: {
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
