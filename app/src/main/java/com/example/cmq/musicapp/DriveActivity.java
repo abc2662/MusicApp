@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,7 @@ public class DriveActivity extends AppCompatActivity {
     public boolean signedIn;
     DriveResourceClient mDriveResourceClient;
     DriveClient mDriveClient;
-    Button btnMyDrive;
+    LinearLayout btnMyDrive;
     ImageButton btnBack;
     ImageButton imgResume;
     String TAG = "OnActivity";
@@ -52,9 +53,6 @@ public class DriveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drive);
-        btnMyDrive = (Button)findViewById(R.id.btnMyDrive);
-        btnBack = (ImageButton)findViewById(R.id.btnBack);
-        imgResume = (ImageButton) findViewById(R.id.btnResume);
         initializeComponents();
     }
 
@@ -148,10 +146,10 @@ public class DriveActivity extends AppCompatActivity {
         //findViewByID
         tvUserName = (TextView) findViewById(R.id.tvName);
         imgUserImg = (CircleImageView) findViewById(R.id.imgUser);
-        //imgUserImg.setImageResource(R.drawable.ic_launcher_background);
-        //signInButton = (SignInButton) findViewById(R.id.btnSignIn);
         signOutButton = (Button) findViewById(R.id.btnSign_Out);
-
+        btnMyDrive = (LinearLayout) findViewById(R.id.btnMyDrive);
+        btnBack = (ImageButton)findViewById(R.id.btnBack);
+        imgResume = (ImageButton) findViewById(R.id.btnResume);
 
         initializeGoogleDriveSignIn();
     }

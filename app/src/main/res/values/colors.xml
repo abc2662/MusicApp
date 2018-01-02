@@ -11,7 +11,7 @@
 
     <!--Item Color-->
     <color name="colorSelected">#ff00a7</color>
-    <color name="colorText2">#2541b2</color>
+    <color name="colorText2">#006dcc</color>
     <!--Palette Color-->
     <color name="colorGray">#cccccc</color>
     <color name="colorLowestDark">#414a4c</color>
