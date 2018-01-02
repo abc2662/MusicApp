@@ -238,7 +238,9 @@ public class MainActivity extends Activity {
                                 Log.w("MimeType", mimeType);
                                 Log.w("MimeType", metadata.getMimeType().toString());
 
-                                Song song = new Song();
+                                Song song = new Song(link);
+                                song.Title = title;
+
                                 ArrayList<Song> songList = new ArrayList<Song>();
                                 songList.add(song);
 

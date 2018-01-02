@@ -46,7 +46,6 @@
             android:layout_marginTop="16dp"
             android:maxLength="25"
             android:padding="5sp"
-            android:text="@string/song_name"
             android:textAlignment="center"
             android:textColor="@color/colorText2"
             android:textSize="24sp" />
@@ -58,7 +57,6 @@
             android:layout_below="@+id/layout_Disc"
             android:maxLength="25"
             android:padding="5sp"
-            android:text="@string/song_artist"
             android:textAlignment="center"
             android:textColor="@color/colorHintText"
             android:textSize="24sp" />

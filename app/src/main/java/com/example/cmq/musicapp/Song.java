@@ -11,9 +11,9 @@ public class Song implements Parcelable {
     public String Link;
     public String Artist;
 
-    public Song() {
+    public Song(String link) {
+        Link = link;
         Title = "";
-        Link = "";
         Artist = "";
     }
 
