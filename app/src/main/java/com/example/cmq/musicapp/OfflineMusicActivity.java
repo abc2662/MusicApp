@@ -38,8 +38,9 @@ public class OfflineMusicActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listViewResults);
         songAdapter = new SongAdapter(this, songList);
         signInButton = (SignInButton) findViewById(R.id.btnSign_In);
-        listView.setAdapter(songAdapter);
+
         searchView = (SearchView)findViewById(R.id.svSearch);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -74,8 +75,10 @@ public class OfflineMusicActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (AskPermission()&&songList.isEmpty())
+        if (AskPermission()&&songList.isEmpty()) {
             getPlayList();
+            listView.setAdapter(songAdapter);
+        }
     }
 
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
@@ -113,8 +116,8 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission granted
-                    if (songList.isEmpty())
-                        getPlayList();
+                    getPlayList();
+                    listView.setAdapter(songAdapter);
                 } else {
                     Log.e("Permisson", "Denied");
                 }
