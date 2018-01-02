@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -21,8 +20,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.google.android.gms.common.SignInButton;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -32,7 +29,8 @@ public class OfflineMusicActivity extends AppCompatActivity {
     private SearchView searchView;
     private ListView listView;
     public SongAdapter songAdapter;
-    ImageButton signInButton;
+    private ImageButton btn_signIn;
+    private ImageButton btn_resume;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,18 +38,20 @@ public class OfflineMusicActivity extends AppCompatActivity {
         AskPermission();
         listView = (ListView) findViewById(R.id.listViewResults);
         songAdapter = new SongAdapter(this, songList);
-        signInButton = (ImageButton) findViewById(R.id.btnSignIn);
+        btn_signIn = (ImageButton) findViewById(R.id.btn_drive);
         listView.setAdapter(songAdapter);
         searchView = (SearchView)findViewById(R.id.svSearch);
+        btn_resume = (ImageButton)findViewById(R.id.btn_resume);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        btn_resume.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                listView.getOnItemClickListener().onItemClick(null, null, 0, 0);
+            public void onClick(View v) {
+                Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
+                resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
+                startActivity(resumeMusicIntent);
             }
         });
 
@@ -64,19 +64,8 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.DEFAULT);
                 startActivity(playmusicIntent);
             }
-
         });
-//        signInButton.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View view)
-//            {
-//                Intent driveintent = new Intent(getApplicationContext(),DriveActivity.class);
-//                startActivity(driveintent);
-//            }
-//        });
-        ViewCompat.setNestedScrollingEnabled(listView, true);
-        signInButton.setOnClickListener(new View.OnClickListener()
+        btn_signIn.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -85,6 +74,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 startActivity(driveintent);
             }
         });
+        ViewCompat.setNestedScrollingEnabled(listView, true);
         listView.setTextFilterEnabled(true);
         setupSearchView();
     }
