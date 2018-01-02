@@ -3,10 +3,8 @@ package com.example.cmq.musicapp;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
-import android.app.VoiceInteractor;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -15,7 +13,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -64,7 +61,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     public static boolean shuffle = false;
     public static int repeatOption = 0;
     public int activityRequest;
-    public Intent musiclinkIntent;
+    public Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,23 +69,15 @@ public class PlayMusicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_play_music);
         createMediaPlayer();
         initializeComponents();
-    }
 
-    private void getPlayList() {
-        songList = musiclinkIntent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
-        songIndex = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
-    }
+        RefreshUI();
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        musiclinkIntent = getIntent();
-        activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
+        intent = getIntent();
+        activityRequest = intent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
 
         switch (activityRequest) {
             case Options.STREAM: {
-                getPlayList();
+                updatePlayList();
                 btnNext.setEnabled(false);
                 btnPrev.setEnabled(false);
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -96,7 +85,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 break;
             }
             case Options.DEFAULT: {
-                getPlayList();
+                updatePlayList();
                 playMusic(songIndex);
                 break;
             }
@@ -107,24 +96,6 @@ public class PlayMusicActivity extends AppCompatActivity {
                     anim_disc.start();
                 }
 
-                //Restore loop button
-                switch (repeatOption) {
-                    case RepeatOptions.REPEAT_ONE:
-                        btnLoop.setImageResource(R.drawable.replay_loop);
-                        break;
-                    case RepeatOptions.NO_REPEAT:
-                        btnLoop.setImageResource(R.drawable.replay);
-                        break;
-                    case RepeatOptions.REPEAT_ALL:
-                        btnLoop.setImageResource(R.drawable.replay_selected);
-                        break;
-                }
-
-                //Restore shuffle button
-                if (shuffle) {
-                    btnShuffle.setImageResource(R.drawable.shuffle_selected);
-                }
-
                 setTime();
                 updateTime();
                 break;
@@ -132,6 +103,30 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
     }
 
+    private void updatePlayList() {
+        songList = intent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
+        songIndex = intent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
+    }
+
+    public void RefreshUI() {
+        //Restore loop button
+        switch (repeatOption) {
+            case RepeatOptions.REPEAT_ONE:
+                btnLoop.setImageResource(R.drawable.replay_loop);
+                break;
+            case RepeatOptions.NO_REPEAT:
+                btnLoop.setImageResource(R.drawable.replay);
+                break;
+            case RepeatOptions.REPEAT_ALL:
+                btnLoop.setImageResource(R.drawable.replay_selected);
+                break;
+        }
+
+        //Restore shuffle button
+        if (shuffle) {
+            btnShuffle.setImageResource(R.drawable.shuffle_selected);
+        }
+    }
 
     public void UpdateUI() {
         if(activityRequest == Options.DEFAULT && songList.get(songIndex).getImage() != null) {
