@@ -1,5 +1,8 @@
 package com.example.cmq.musicapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -18,7 +21,18 @@ public class Song implements Parcelable {
         Link = source.readString();
         Artist = source.readString();
     }
-
+    public Bitmap getImage()
+    {
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(Link);
+        byte[] artBytes = mmr.getEmbeddedPicture();
+        if(artBytes!=null)
+        {
+           Bitmap image = BitmapFactory.decodeByteArray(artBytes,0,artBytes.length);
+           return image;
+        }
+        return  null;
+    }
     @Override
     public int describeContents() {
         return 0;

@@ -4,15 +4,20 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +29,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.blurry.Blurry;
+
 public class PlayMusicActivity extends AppCompatActivity {
     public static final class MESSAGE {
         public static final String ACTIVITY_REQUEST = "playMusicRequest";
@@ -123,16 +132,15 @@ public class PlayMusicActivity extends AppCompatActivity {
 
 
     public void UpdateUI() {
-//        try {
-//            musicLink = musiclinkIntent.getStringExtra(getString(R.string.musiclinkdata));
-//        } catch (Exception e) {
-//            Log.v("OnResume", "Music");
-//        }
-//        try {
-//            title = musiclinkIntent.getStringExtra(getString(R.string.songtitle));
-//        } catch (Exception e) {
-//            Log.w("OnDrive", "Playlist");
-//        }
+        if(songList.get(songIndex).getImage()!=null)
+        {
+            Bitmap bitmap = songList.get(songIndex).getImage();
+            Drawable drawable = new BitmapDrawable(getResources(),songList.get(songIndex).getImage());
+            imgDisc.setImageDrawable(drawable);
+            relativeLayout.setBackground(drawable);
+            Blurry.with(getApplicationContext()).from(bitmap).into(imgBlur);
+        }
+
 
         txtTitle.setText(songList.get(songIndex).Title);
         txtArtist.setText(songList.get(songIndex).Artist);
@@ -263,9 +271,11 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     TextView txtTitle, txtTimeProcess, txtTimeTotal, txtArtist;
+    RelativeLayout relativeLayout;
     SeekBar sbProcess;
     ImageButton btnPrev, btnPlay, btnNext, btnShuffle, btnLoop, btnList, btnLike;
     ImageView imgDisc;
+    ImageView imgBlur;
     AnimatorSet anim_disc;
 
     private void initializeComponents() {
@@ -280,8 +290,9 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnList = (ImageButton) findViewById(R.id.btn_list);
         btnShuffle = (ImageButton) findViewById(R.id.btn_shuffle);
         btnLoop = (ImageButton) findViewById(R.id.btn_loop);
-        imgDisc = (ImageView) findViewById(R.id.img_Disc);
-
+        imgDisc = (CircleImageView) findViewById(R.id.img_Disc);
+        imgBlur = (ImageView) findViewById(R.id.img_blur);
+        relativeLayout = (RelativeLayout)findViewById(R.id.layout_parent);
         anim_disc = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.disc_rotation);
         anim_disc.setTarget(imgDisc);
         anim_disc.start();

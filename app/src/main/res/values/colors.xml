@@ -24,4 +24,5 @@
     <color name="colorWhite">#FFF</color>
     <color name="colorBlack">#000000</color>
 
+    <color name="colorBack">#263238</color>
 </resources>

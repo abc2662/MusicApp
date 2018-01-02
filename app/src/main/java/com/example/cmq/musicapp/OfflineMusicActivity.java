@@ -40,9 +40,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
         AskPermission();
         listView = (ListView) findViewById(R.id.listViewResults);
         songAdapter = new SongAdapter(this, songList);
-        signInButton = (SignInButton) findViewById(R.id.btnSign_In);
-
-        signInButton = (ImageButton) findViewById(R.id.btnSignIn);
+        signInButton = (ImageButton) findViewById(R.id.btn_drive);
         listView.setAdapter(songAdapter);
         searchView = (SearchView)findViewById(R.id.svSearch);
 

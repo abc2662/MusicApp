@@ -5,10 +5,15 @@
     android:id="@+id/layout_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorHighestDark"
+    android:background="@color/colorHigherDark"
     tools:context="com.example.cmq.musicapp.PlayMusicActivity">
-
-
+    <ImageView
+        android:id="@+id/img_blur"
+        android:adjustViewBounds="true"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scaleType="fitXY"
+        android:background="@color/colorBack"/>
     <LinearLayout
         android:id="@+id/layout_Disc"
         android:layout_width="match_parent"
@@ -22,13 +27,16 @@
             android:background="@null"
             android:scaleType="fitCenter"
             android:src="@drawable/list2" />
-        <ImageView
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/img_Disc"
-            android:layout_width="300sp"
-            android:layout_height="300sp"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="@null"
-            android:src="@drawable/cd_512" />
+            android:src="@drawable/cd_512"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"/>
 
         <TextView
             android:id="@+id/txt_TitleSong"
@@ -61,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:background="@color/colorWhite"
+        android:background="@android:color/transparent"
         android:orientation="vertical"
         android:paddingBottom="10sp">
 

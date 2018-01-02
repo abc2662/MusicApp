@@ -46,6 +46,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.android.gms:play-services-auth:11.6.0'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'jp.wasabeef:blurry:2.1.1'
     //compile 'com.google.apis:google-api-services-people:v1-rev4-1.22.0'
     //compile 'com.google.apis:google-api-services-drive:v3-rev90-1.23.0'
     //compile 'com.google.apis:google-api-services-drive:v2-rev285-1.23.0'
