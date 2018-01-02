@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,11 +42,15 @@ public class DriveActivity extends AppCompatActivity {
     public boolean signedIn;
     DriveResourceClient mDriveResourceClient;
     DriveClient mDriveClient;
+    Button btnMyDrive;
+    ImageButton btnBack;
     String TAG = "OnActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drive);
+        btnMyDrive = (Button)findViewById(R.id.btnMyDrive);
+        btnBack = (ImageButton)findViewById(R.id.btnBack);
         initializeComponents();
     }
     @Override
@@ -72,11 +77,54 @@ public class DriveActivity extends AppCompatActivity {
         } else {
             signedIn = false;
         }
+        btnMyDrive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!signedIn)
+                {
+                    signIn();
+                }
+                else
+                {
+                    openFile();
+                }
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
     TextView tvUserName;
     ImageView imgUserImg;
     //SignInButton signInButton;
     Button signOutButton;
+    public void openFile()
+    {
+        try {
+            pickFile()
+                    .addOnSuccessListener(this,
+                            new OnSuccessListener<DriveId>() {
+                                @Override
+                                public void onSuccess(DriveId driveId) {
+                                    getMetadata(driveId.asDriveFile());
+                                    //openFiles(driveId.asDriveFile());
+                                }
+                            })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("Drive List:", "No file selected", e);
+                            //showMessage(getString(R.string.file_not_selected));
+                            finish();
+                        }
+                    });
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Sign In needed", Toast.LENGTH_SHORT);
+        }
+    }
     private void initializeComponents() {
         //findViewByID
         tvUserName = (TextView) findViewById(R.id.tvName);
@@ -165,11 +213,8 @@ public class DriveActivity extends AppCompatActivity {
 
 
     public void btnMyDrive_OnClick(View view) {
-        if(!signedIn)
-        {
-            signIn();
-        }
-        else
+
+        //else
         {
             try {
                 pickFile()
@@ -260,7 +305,9 @@ public class DriveActivity extends AppCompatActivity {
                 });
     }
 
-    public void btnBack_OnClick(View view) {
-        finish();
+    public void btnResume_Click(View view) {
+        Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
+        resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
+        startActivity(resumeMusicIntent);
     }
 }
