@@ -5,7 +5,7 @@
 
     <ImageView
         android:id="@+id/itemImage"
-        android:layout_width="68dp"
+        android:layout_width="51dp"
         android:layout_height="match_parent"
         android:padding="5dp"
         android:scaleType="fitCenter"
@@ -24,7 +24,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:paddingBottom="0dp"
             android:text="songTitle"
             android:textAlignment="viewStart"
             android:textColor="@color/colorText2"
@@ -38,7 +38,7 @@
             android:paddingBottom="8dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingTop="8dp"
+            android:paddingTop="0dp"
             android:text="songArtist"
             android:textAlignment="viewStart"
             android:textColor="@color/colorBlack"
