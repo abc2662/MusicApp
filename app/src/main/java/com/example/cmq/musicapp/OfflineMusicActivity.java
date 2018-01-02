@@ -7,13 +7,12 @@ import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,9 +28,7 @@ import java.util.ArrayList;
 
 public class OfflineMusicActivity extends AppCompatActivity {
     private SearchView searchView;
-    private ListView listView;
-    public SongAdapter songAdapter;
-    private ImageButton btn_signIn;
+    private SongAdapter songAdapter;
     private ImageButton btn_resume;
 
     @Override
@@ -39,12 +36,12 @@ public class OfflineMusicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline_music);
 
-        listView = (ListView) findViewById(R.id.listViewResults);
+        ListView listView = (ListView) findViewById(R.id.listViewResults);
         songAdapter = new SongAdapter(this, songList);
         listView.setAdapter(songAdapter);
 
         searchView = (SearchView) findViewById(R.id.svSearch);
-        btn_signIn = (ImageButton) findViewById(R.id.btn_drive);
+        ImageButton btn_signIn = (ImageButton) findViewById(R.id.btn_drive);
         btn_resume = (ImageButton) findViewById(R.id.btn_resume);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -65,18 +62,18 @@ public class OfflineMusicActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent playmusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-                playmusicIntent.putParcelableArrayListExtra(PlayMusicActivity.MESSAGE.SONG_LIST, songList);
-                playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_INDEX, position);
-                playmusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.DEFAULT);
-                startActivity(playmusicIntent);
+                Intent playIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
+                playIntent.putParcelableArrayListExtra(PlayMusicActivity.MESSAGE.SONG_LIST, songList);
+                playIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_INDEX, position);
+                playIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.DEFAULT);
+                startActivity(playIntent);
             }
         });
         btn_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent driveintent = new Intent(getApplicationContext(), DriveActivity.class);
-                startActivity(driveintent);
+                Intent driveIntent = new Intent(getApplicationContext(), DriveActivity.class);
+                startActivity(driveIntent);
             }
         });
 
@@ -119,7 +116,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case READ_EXTERNAL_STORAGE_PERMISSION_CODE: {
 
@@ -138,7 +135,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
         }
     }
 
-    public ArrayList<Song> songList = new ArrayList<Song>();
+    public ArrayList<Song> songList = new ArrayList<>();
     public void updateSongList() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -163,10 +160,8 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 
                 Song song = new Song(link);
-                if (title != null)
-                    song.Title = title;
-                if (artist != null)
-                    song.Artist = artist;
+                song.setTitle(title);
+                song.setArtist(artist);
 
                 songList.add(song);
             }
@@ -175,7 +170,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
         }
     }
 
-    public void setupSearchView() {
+    private void setupSearchView() {
         //searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
 
@@ -203,8 +198,8 @@ public class OfflineMusicActivity extends AppCompatActivity {
     class FileExtensionFilter implements FilenameFilter {
         @Override
         public boolean accept(File dir, String name) {
-            String mimetype = URLConnection.guessContentTypeFromName(name);
-            return mimetype != null && mimetype.startsWith("audio");
+            String mimeType = URLConnection.guessContentTypeFromName(name);
+            return mimeType != null && mimeType.startsWith("audio");
         }
     }
 

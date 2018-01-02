@@ -40,8 +40,9 @@ public class SongAdapter extends ArrayAdapter<Song> implements Filterable {
         return filteredSongList.size();
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // Get the data item for this position
         Song song = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
@@ -51,11 +52,11 @@ public class SongAdapter extends ArrayAdapter<Song> implements Filterable {
         // Lookup view for data population
         TextView itemTitle = (TextView) convertView.findViewById(R.id.itemTitle);
         TextView itemArtist = (TextView) convertView.findViewById(R.id.itemArtist);
-        ImageView itemImage = (ImageView) convertView.findViewById(R.id.itemImage);
+        //ImageView itemImage = (ImageView) convertView.findViewById(R.id.itemImage);
 
         // Populate the data into the template view using the data object
-        itemTitle.setText(song.Title);
-        itemArtist.setText(song.Artist);
+        itemTitle.setText(song.getTitle());
+        itemArtist.setText(song.getArtist());
         // TODO: Set itemImage 's image to album cover...
 
         // Return the completed view to render on screen
@@ -74,14 +75,14 @@ public class SongAdapter extends ArrayAdapter<Song> implements Filterable {
             String filterString = constraint.toString().toLowerCase();
 
             FilterResults results = new FilterResults();
-            ArrayList<Song> filterResults = new ArrayList<Song>();
+            ArrayList<Song> filterResults = new ArrayList<>();
 
             int size = songList.size();
             Song filteringSong;
             for (int i = 0; i < size; i++) {
                 filteringSong = songList.get(i);
-                if (filteringSong.Title.toLowerCase().contains(filterString) ||
-                        filteringSong.Artist.toLowerCase().contains(filterString)) {
+                if (filteringSong.getTitle().toLowerCase().contains(filterString) ||
+                        filteringSong.getArtist().toLowerCase().contains(filterString)) {
                     filterResults.add(filteringSong);
                 }
             }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="drive_music">Nhạc Google Drive của tôi</string>
+    <string name="sign_out">Đăng xuất</string>
+    <string name="search_hint">Tìm bài hát hoặc ca sĩ...</string>
+</resources>

@@ -78,15 +78,16 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:focusable="true">
 
         <ImageView
             android:layout_width="40sp"
             android:layout_height="40sp"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="8sp"
-            android:layout_marginLeft="16sp"
-            android:layout_marginRight="8sp"
+            android:layout_marginStart="16sp"
+            android:layout_marginEnd="8sp"
             android:layout_marginTop="8sp"
             android:scaleType="fitCenter"
             android:src="@drawable/googleg_standard_color_18" />
@@ -95,10 +96,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16sp"
-            android:layout_marginLeft="8sp"
-            android:layout_marginRight="16sp"
+            android:layout_marginStart="8sp"
+            android:layout_marginEnd="16sp"
             android:layout_marginTop="16sp"
-            android:text="@string/drivemusic"
+            android:text="@string/drive_music"
             android:textColor="@color/colorText"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -113,7 +114,7 @@
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:onClick="btnSignOut_OnClick"
-        android:text="@string/signout"
+        android:text="@string/sign_out"
         android:textColor="@color/colorText2"
         android:textSize="16sp"
         android:textStyle="bold"

@@ -1,20 +1,9 @@
 <resources>
     <string name="app_name">MyMusicApp</string>
-    <string name="song_name">My Song</string>
-    <string name="artist_name">Artist</string>
     <string name="fontFamily">serif</string>
     <string name="text_Clock">00:00</string>
     <string name="sever_client_id">666582323887-tti3b01halai5q02i743jc4o5lbtlobj.apps.googleusercontent.com</string>
-    <string name="title_activity_pick">PickActivity</string>
-    <string name="musiclinkdata">musicLinkExtra</string>
-    <string name="songtitle">songtitle</string>
-    <string name="resumeMusicrequest">resumeMusicrequest</string>
-    <string name="streamMusicrequest">streamMusicrequest</string>
-    <string name="playMusicrequest">playMusicrequest</string>
-    <string name="action_settings">Settings</string>
-    <string name="drive">Google Drive</string>
-    <string name="nowplaying">Now Playing</string>
-    <string name="song_artist">Artist name</string>
-    <string name="drivemusic">My Google Drive Music</string>
-    <string name="signout">Sign Out</string>
+    <string name="drive_music">My Google Drive Music</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="search_hint">Search songs or artists</string>
 </resources>

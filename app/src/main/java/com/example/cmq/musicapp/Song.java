@@ -5,13 +5,14 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 public class Song implements Parcelable {
-    public String Title;
-    public String Link;
-    public String Artist;
+    @NonNull private String Title;
+    @NonNull private String Link;
+    @NonNull private String Artist;
 
-    public Song(String link) {
+    public Song(@NonNull String link) {
         Link = link;
         Title = "";
         Artist = "";
@@ -22,6 +23,24 @@ public class Song implements Parcelable {
         Link = source.readString();
         Artist = source.readString();
     }
+
+    public String getTitle() { return Title; }
+    public String getLink() { return Link; }
+    public String getArtist() { return Artist; }
+
+    public void setTitle(String title) {
+        if (title != null)
+            Title = title;
+    }
+    public void setLink(String link) {
+        if (link != null)
+            Link = link;
+    }
+    public void setArtist(String artist) {
+        if (artist != null)
+            Artist = artist;
+    }
+
     public Bitmap getImage()
     {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -29,8 +48,7 @@ public class Song implements Parcelable {
         byte[] artBytes = mmr.getEmbeddedPicture();
         if(artBytes!=null)
         {
-           Bitmap image = BitmapFactory.decodeByteArray(artBytes,0,artBytes.length);
-           return image;
+            return BitmapFactory.decodeByteArray(artBytes,0,artBytes.length);
         }
         return  null;
     }
