@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,6 +51,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
             }
 
         });
+        ViewCompat.setNestedScrollingEnabled(listView, true);
         signInButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -111,7 +113,8 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission granted
-
+                    if (songList.isEmpty())
+                        getPlayList();
                 } else {
                     Log.e("Permisson", "Denied");
                 }
