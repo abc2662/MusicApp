@@ -147,8 +147,12 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
                 String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 
-                Song song = new Song(title, link);
-                song.Artist = artist;
+                Song song = new Song();
+                song.Link = link;
+                if (title != null)
+                    song.Title = title;
+                if (artist != null)
+                    song.Artist = artist;
 
                 songList.add(song);
             }
@@ -174,12 +178,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (TextUtils.isEmpty(newText)) {
-                    songAdapter.getFilter().filter(null);
-                } else {
-                    songAdapter.getFilter().filter(newText);
-                    listView.deferNotifyDataSetChanged();
-                }
+                songAdapter.getFilter().filter(newText);
                 return true;
             }
         });
