@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_parent"
@@ -14,12 +15,20 @@
         android:layout_width="match_parent"
         android:scaleType="centerCrop"
         android:background="@color/colorBack"/>
+
     <LinearLayout
         android:id="@+id/layout_Disc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="0sp"
+        android:layout_marginStart="0sp"
+        android:layout_marginTop="0sp"
         android:orientation="vertical"
-        android:padding="10sp">
+        android:padding="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <ImageButton
             android:id="@+id/btn_list"
             android:layout_width="40sp"
@@ -28,21 +37,19 @@
             android:scaleType="fitCenter"
             android:src="@drawable/list2" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/img_Disc"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="300sp"
+            android:layout_height="300sp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/cd_512"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#FF000000"/>
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2sp" />
 
         <TextView
             android:id="@+id/txt_TitleSong"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_Disc"
             android:layout_marginTop="16dp"
             android:maxLength="25"
             android:padding="5sp"
@@ -54,7 +61,6 @@
             android:id="@+id/txt_Artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_Disc"
             android:maxLength="25"
             android:padding="5sp"
             android:textAlignment="center"
@@ -66,11 +72,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout_Disc"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="0sp"
+        android:layout_marginEnd="0sp"
+        android:layout_marginStart="0sp"
+        android:layout_marginTop="0sp"
         android:background="@android:color/transparent"
+        android:gravity="center"
         android:orientation="vertical"
-        android:gravity="center">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_Disc">
 
         <RelativeLayout
             android:id="@+id/layout_Time"
@@ -86,7 +98,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:text="@string/text_Clock"
-                android:textColor="@color/colorText2"
+                android:textColor="@color/colorWhite"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -95,7 +107,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/txt_TimeProcess"
-                android:layout_toStartOf="@+id/txt_TimeTotal" />
+                android:layout_toStartOf="@+id/txt_TimeTotal"
+                android:progressTint="@color/colorWhite"
+                android:secondaryProgressTint="@color/colorWhite"
+                android:thumbTint="@color/colorWhite" />
 
             <TextView
                 android:id="@+id/txt_TimeTotal"
@@ -103,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:text="@string/text_Clock"
-                android:textColor="@color/colorText2"
+                android:textColor="@color/colorWhite"
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -165,4 +180,4 @@
                 tools:ignore="ContentDescription" />
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
