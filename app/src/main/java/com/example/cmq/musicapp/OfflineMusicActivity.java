@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -22,6 +23,7 @@ import android.widget.SearchView;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 
@@ -203,7 +205,8 @@ public class OfflineMusicActivity extends AppCompatActivity {
     class FileExtensionFilter implements FilenameFilter {
         @Override
         public boolean accept(File dir, String name) {
-            return (name.endsWith(".mp3") || name.endsWith(".MP3"));
+            String mimetype = URLConnection.guessContentTypeFromName(name);
+            return mimetype != null && mimetype.startsWith("audio");
         }
     }
 
