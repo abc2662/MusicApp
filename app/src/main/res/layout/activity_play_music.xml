@@ -119,10 +119,11 @@
 
             <ImageButton
                 android:id="@+id/btn_shuffle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0sp"
+                android:layout_height="32sp"
                 android:layout_weight="1"
                 android:background="@null"
+                android:scaleType="fitCenter"
                 android:src="@drawable/shuffle"
                 tools:ignore="ContentDescription" />
 
@@ -157,10 +158,11 @@
 
             <ImageButton
                 android:id="@+id/btn_loop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0sp"
+                android:layout_height="32sp"
                 android:layout_weight="1"
                 android:background="@null"
+                android:scaleType="fitCenter"
                 android:src="@drawable/replay"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
