@@ -62,11 +62,12 @@ public class PlayMusicActivity extends AppCompatActivity {
         createMediaPlayer();
         initializeComponents();
     }
-    private void getPlayList()
-    {
+
+    private void getPlayList() {
         songList = musiclinkIntent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
         songIndex = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -134,6 +135,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 //        }
 
         txtTitle.setText(songList.get(songIndex).Title);
+        txtArtist.setText(songList.get(songIndex).Artist);
         setTime();
         updateTime();
     }
@@ -203,13 +205,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                switch (repeatOption)
-                {
+                switch (repeatOption) {
                     case RepeatOptions.NO_REPEAT: {
                         if (songIndex == songList.size() - 1) {
                             anim_disc.pause();
-                        }
-                        else
+                        } else
                             btnNext.callOnClick();
                         break;
                     }
@@ -228,8 +228,8 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     public void shuffleSongList() {
-        if(shuffleIndices != null)
-        shuffleIndices.clear();
+        if (shuffleIndices != null)
+            shuffleIndices.clear();
         for (int i = 0; i < songList.size(); i++)
             shuffleIndices.add(i);
         Collections.shuffle(shuffleIndices);
@@ -243,8 +243,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     public void changeRepeatOption(int index) {
-        switch (repeatOption)
-        {
+        switch (repeatOption) {
             case RepeatOptions.NO_REPEAT: {
                 btnLoop.setImageResource(R.drawable.replay);
                 mediaPlayer.setLooping(false);
@@ -263,20 +262,22 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
     }
 
-    TextView txtTitle, txtTimeProcess, txtTimeTotal;
+    TextView txtTitle, txtTimeProcess, txtTimeTotal, txtArtist;
     SeekBar sbProcess;
-    ImageButton btnPrev, btnPlay, btnNext, btnShuffle, btnLoop;
+    ImageButton btnPrev, btnPlay, btnNext, btnShuffle, btnLoop, btnList, btnLike;
     ImageView imgDisc;
     AnimatorSet anim_disc;
 
     private void initializeComponents() {
         txtTitle = (TextView) findViewById(R.id.txt_TitleSong);
+        txtArtist = (TextView) findViewById(R.id.txt_Artist);
         txtTimeProcess = (TextView) findViewById(R.id.txt_TimeProcess);
         txtTimeTotal = (TextView) findViewById(R.id.txt_TimeTotal);
         sbProcess = (SeekBar) findViewById(R.id.sb_Process);
         btnPrev = (ImageButton) findViewById(R.id.btn_prev);
         btnPlay = (ImageButton) findViewById(R.id.btn_play);
         btnNext = (ImageButton) findViewById(R.id.btn_next);
+        btnList = (ImageButton) findViewById(R.id.btn_list);
         btnShuffle = (ImageButton) findViewById(R.id.btn_shuffle);
         btnLoop = (ImageButton) findViewById(R.id.btn_loop);
         imgDisc = (ImageView) findViewById(R.id.img_Disc);
@@ -377,5 +378,14 @@ public class PlayMusicActivity extends AppCompatActivity {
                 }
             }
         });
+        //--------------------------------------------------//
+        //List Button Event
+        btnList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 }
