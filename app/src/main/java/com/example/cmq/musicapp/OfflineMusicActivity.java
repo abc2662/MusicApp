@@ -17,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.google.android.gms.common.SignInButton;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -25,12 +27,18 @@ import java.util.ArrayList;
 public class OfflineMusicActivity extends AppCompatActivity {
     private SearchView searchView;
     private ListView listView;
-
+    public SongAdapter songAdapter;
+    SignInButton signInButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick);
+        AskPermission();
         listView = (ListView) findViewById(R.id.listViewResults);
+        songAdapter = new SongAdapter(this, songList);
+        signInButton = (SignInButton) findViewById(R.id.btnSign_In);
+        listView.setAdapter(songAdapter);
+        searchView = (SearchView)findViewById(R.id.svSearch);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -42,29 +50,35 @@ public class OfflineMusicActivity extends AppCompatActivity {
             }
 
         });
-
-        SongAdapter songAdapter = new SongAdapter(this, songList);
-        listView.setAdapter(songAdapter);
-
-        searchView = (SearchView)findViewById(R.id.svSearch);
+        signInButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent driveintent = new Intent(getApplicationContext(),DriveActivity.class);
+                startActivity(driveintent);
+            }
+        });
+        listView.setTextFilterEnabled(true);
+        setupSearchView();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        AskPermission();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (songList.isEmpty())
+        if (AskPermission()&&songList.isEmpty())
             getPlayList();
     }
 
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
 
-    private void AskPermission() {
+    private boolean AskPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -83,6 +97,9 @@ public class OfflineMusicActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     READ_EXTERNAL_STORAGE_PERMISSION_CODE);
         }
+        return  ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
@@ -94,6 +111,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission granted
+
                 } else {
                     Log.e("Permisson", "Denied");
                 }
@@ -149,14 +167,14 @@ public class OfflineMusicActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (TextUtils.isEmpty(newText)){
-                    //simpleAdapter.getFilter().filter("");
-                    listView.clearTextFilter();
+                    songAdapter.getFilter().filter(null);
                 }else {
-                    //simpleAdapter.getFilter().filter(newText.toString());
-                    int a;
+                    songAdapter.getFilter().filter(newText);
+                    listView.deferNotifyDataSetChanged();
                 }
                 return true;
             };
+
         });
         //searchView.setSubmitButtonEnabled(true);
         searchView.setQueryHint("Search Here");

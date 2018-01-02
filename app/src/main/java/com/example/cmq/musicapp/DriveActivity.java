@@ -1,10 +1,10 @@
 package com.example.cmq.musicapp;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,23 +37,20 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity {
-    static String TAG = "OnActivity ";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //initializeComponents();
-    }
-
+public class DriveActivity extends AppCompatActivity {
     public boolean signedIn;
     DriveResourceClient mDriveResourceClient;
     DriveClient mDriveClient;
-
+    String TAG = "OnActivity";
     @Override
-    protected void onStart() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_drive);
+        initializeComponents();
+    }
+    @Override
+    protected void onStart()
+    {
         super.onStart();
         GoogleSignInAccount account = null;
         try {
@@ -64,7 +61,7 @@ public class MainActivity extends Activity {
 
         if (account != null) {
             signedIn = true;
-            signInButton.setVisibility(View.GONE);
+            //signInButton.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
             mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
             mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), account);
@@ -76,19 +73,28 @@ public class MainActivity extends Activity {
             signedIn = false;
         }
     }
+    TextView tvUserName;
+    ImageView imgUserImg;
+    //SignInButton signInButton;
+    Button signOutButton;
+    private void initializeComponents() {
+        //findViewByID
+        tvUserName = (TextView) findViewById(R.id.tvName);
+        imgUserImg = (ImageView) findViewById(R.id.imgUser);
+        //imgUserImg.setImageResource(R.drawable.ic_launcher_background);
+        //signInButton = (SignInButton) findViewById(R.id.btnSignIn);
+        signOutButton = (Button) findViewById(R.id.btnSign_Out);
 
-    //SignIn Event
-    //-------------------------------------------------------------------------
+
+        initializeGoogleDriveSignIn();
+    }
     private static final int REQUEST_CODE_SIGN_IN = 100;
-
     private void signIn() {
         if (!signedIn) {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN);
         }
     }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -101,7 +107,6 @@ public class MainActivity extends Activity {
                         Log.w(TAG, "sigInResult: Success");
                         signedIn = true;
                         tvUserName.setText(account.getDisplayName());
-                        signInButton.setVisibility(View.GONE);
                         signOutButton.setVisibility(View.VISIBLE);
                         Log.w("URI", account.getPhotoUrl().toString());
                         Picasso.with(getApplicationContext()).load(account.getPhotoUrl().toString()).into(imgUserImg);
@@ -130,14 +135,18 @@ public class MainActivity extends Activity {
             }
         }
     }
-
-    //SignOut Event
-    //-------------------------------------------------------------------------
-    public void btnSignOut_OnClick(View view) {
-        SignOut();
+    GoogleSignInClient mGoogleSignInClient;
+    private void initializeGoogleDriveSignIn() {
+        GoogleSignInOptions googleSignInOptions =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestScopes(Drive.SCOPE_FILE)
+                        .requestScopes(Drive.SCOPE_APPFOLDER)
+                        .requestEmail()
+                        .requestProfile()
+                        .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), googleSignInOptions);
     }
-
-    private void SignOut() {
+    public void btnSignOut_OnClick(View view) {
         if (!signedIn)
             return;
 
@@ -145,9 +154,8 @@ public class MainActivity extends Activity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(getApplicationContext(), "Signed Out", Toast.LENGTH_LONG).show();
-                Log.w(TAG, "SignOut Success!");
+                Log.w("On", "SignOut Success!");
                 signedIn = false;
-                signInButton.setVisibility(View.VISIBLE);
                 signOutButton.setVisibility(View.GONE);
                 imgUserImg.setImageResource(R.drawable.default_ava);
                 tvUserName.setText("");
@@ -155,46 +163,38 @@ public class MainActivity extends Activity {
         });
     }
 
-    public void imgMusic_OnClick(View view) {
-        Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-        resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
-        startActivity(resumeMusicIntent);
-    }
 
-    //Get Drive PlayList
-    //--------------------------------------------------------------------------
-    public void btnDriveList_OnClick(View view) {
-        try {
-            pickFile()
-                    .addOnSuccessListener(this,
-                            new OnSuccessListener<DriveId>() {
-                                @Override
-                                public void onSuccess(DriveId driveId) {
-                                    getMetadata(driveId.asDriveFile());
-                                    //openFiles(driveId.asDriveFile());
-                                }
-                            })
-                    .addOnFailureListener(this, new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, "No file selected", e);
-                            //showMessage(getString(R.string.file_not_selected));
-                            finish();
-                        }
-                    });
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Sign In needed", Toast.LENGTH_SHORT);
+    public void btnMyDrive_OnClick(View view) {
+        if(!signedIn)
+        {
+            signIn();
+        }
+        else
+        {
+            try {
+                pickFile()
+                        .addOnSuccessListener(this,
+                                new OnSuccessListener<DriveId>() {
+                                    @Override
+                                    public void onSuccess(DriveId driveId) {
+                                        getMetadata(driveId.asDriveFile());
+                                        //openFiles(driveId.asDriveFile());
+                                    }
+                                })
+                        .addOnFailureListener(this, new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e("Drive List:", "No file selected", e);
+                                //showMessage(getString(R.string.file_not_selected));
+                                finish();
+                            }
+                        });
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Sign In needed", Toast.LENGTH_SHORT);
+            }
         }
 
     }
-
-    public void btnPlayList_OnClick(View view) {
-        Intent intent = new Intent(getApplicationContext(), OfflineMusicActivity.class);
-        startActivity(intent);
-    }
-
-    //OTHER FUNCTION
-    //---------------------------------------------------------------------------
     private static final int REQUEST_CODE_OPEN_ITEM = 300;
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
 
@@ -216,7 +216,7 @@ public class MainActivity extends Activity {
     public Task<DriveId> pickFile() {
         OpenFileActivityOptions openOptions =
                 new OpenFileActivityOptions.Builder()
-                        .setSelectionFilter(Filters.eq(SearchableField.MIME_TYPE, "audio/mp3"))
+                        .setSelectionFilter(Filters.or(Filters.eq(SearchableField.MIME_TYPE, "audio/mp3"),Filters.eq(SearchableField.MIME_TYPE, "audio/mpeg")))
                         .setActivityTitle("Select File")
                         .build();
         return pickItem(openOptions);
@@ -253,47 +253,14 @@ public class MainActivity extends Activity {
                 .addOnFailureListener(this, new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to retrieve metadata", e);
+                        Log.e("OnDriveList", "Unable to retrieve metadata", e);
                         //showMessage(getString(R.string.read_failed));
                         //finish();
                     }
                 });
     }
 
-    GoogleSignInClient mGoogleSignInClient;
-
-    private void initializeGoogleDriveSignIn() {
-        GoogleSignInOptions googleSignInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestScopes(Drive.SCOPE_FILE)
-                        .requestScopes(Drive.SCOPE_APPFOLDER)
-                        .requestEmail()
-                        .requestProfile()
-                        .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), googleSignInOptions);
-    }
-
-    TextView tvUserName;
-    ImageView imgUserImg;
-    SignInButton signInButton;
-    Button signOutButton;
-
-    private void initializeComponents() {
-        //findViewByID
-//        tvUserName = (TextView) findViewById(R.id.tvUserName);
-//        imgUserImg = (ImageView) findViewById(R.id.imgUserImg);
-//        //imgUserImg.setImageResource(R.drawable.ic_launcher_background);
-//        signInButton = (SignInButton) findViewById(R.id.btnSignIn);
-//        signOutButton = (Button) findViewById(R.id.btnSignOut);
-//
-//        signInButton.setSize(SignInButton.SIZE_STANDARD);
-//        signInButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                signIn();
-//            }
-//        });
-
-        initializeGoogleDriveSignIn();
+    public void btnBack_OnClick(View view) {
+        finish();
     }
 }
