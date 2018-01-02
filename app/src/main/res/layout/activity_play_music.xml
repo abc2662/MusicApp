@@ -22,8 +22,8 @@
         android:padding="10sp">
         <ImageButton
             android:id="@+id/btn_list"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
             android:background="@null"
             android:scaleType="fitCenter"
             android:src="@drawable/list2" />
