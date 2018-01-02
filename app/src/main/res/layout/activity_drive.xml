@@ -13,11 +13,12 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
+        android:layout_marginStart="4dp"
         android:background="@drawable/user_banner"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tvName"
@@ -70,7 +71,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="300dp"
         android:background="@color/colorText2"
-        android:onClick="btnMyDrive_OnClick"
+
         android:text="Drive PlayList"
         android:textColor="@android:color/white"
         android:textStyle="bold"
@@ -85,17 +86,17 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/list2"
-        android:onClick="btnBack_OnClick"
+        android:id="@+id/btnBack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <ImageButton
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:src="@drawable/music_resume"
+        android:background="@drawable/music_resume"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:onClick="imgMusic_OnClick"/>
+        android:onClick="btnResume_Click"/>
 </android.support.constraint.ConstraintLayout>
