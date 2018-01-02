@@ -46,6 +46,7 @@ public class DriveActivity extends AppCompatActivity {
     DriveClient mDriveClient;
     Button btnMyDrive;
     ImageButton btnBack;
+    ImageButton imgResume;
     String TAG = "OnActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +54,15 @@ public class DriveActivity extends AppCompatActivity {
         setContentView(R.layout.activity_drive);
         btnMyDrive = (Button)findViewById(R.id.btnMyDrive);
         btnBack = (ImageButton)findViewById(R.id.btnBack);
+        imgResume = (ImageButton) findViewById(R.id.btnResume);
         initializeComponents();
     }
+
     @Override
     protected void onStart()
     {
         super.onStart();
+
         GoogleSignInAccount account = null;
         try {
             account = GoogleSignIn.getLastSignedInAccount(this);
@@ -98,6 +102,19 @@ public class DriveActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        if(PlayMusicActivity.songList==null)
+        {
+         imgResume.setVisibility(View.GONE);
+        }
+        else
+        {
+            imgResume.setVisibility(View.VISIBLE);
+        }
     }
     TextView tvUserName;
     ImageView imgUserImg;
@@ -237,7 +254,7 @@ public class DriveActivity extends AppCompatActivity {
                             }
                         });
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Sign In needed", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Sign In needed", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -283,9 +300,11 @@ public class DriveActivity extends AppCompatActivity {
 
                                 Log.w("Link", link);
                                 Log.w("MimeType", mimeType);
-                                Log.w("MimeType", metadata.getMimeType().toString());
+                                Log.w("MimeType", metadata.getMimeType());
 
-                                Song song = new Song();
+                                Song song = new Song(link);
+                                song.Title = title;
+
                                 ArrayList<Song> songList = new ArrayList<Song>();
                                 songList.add(song);
 
@@ -308,6 +327,8 @@ public class DriveActivity extends AppCompatActivity {
     }
 
     public void btnResume_Click(View view) {
+        if(PlayMusicActivity.songList ==null)
+            return;
         Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
         resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
         startActivity(resumeMusicIntent);

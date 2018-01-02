@@ -33,6 +33,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
     public SongAdapter songAdapter;
     private ImageButton btn_signIn;
     private ImageButton btn_resume;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +43,9 @@ public class OfflineMusicActivity extends AppCompatActivity {
         songAdapter = new SongAdapter(this, songList);
         listView.setAdapter(songAdapter);
 
-        searchView = (SearchView)findViewById(R.id.svSearch);
+        searchView = (SearchView) findViewById(R.id.svSearch);
         btn_signIn = (ImageButton) findViewById(R.id.btn_drive);
-        btn_resume = (ImageButton)findViewById(R.id.btn_resume);
+        btn_resume = (ImageButton) findViewById(R.id.btn_resume);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -52,6 +53,9 @@ public class OfflineMusicActivity extends AppCompatActivity {
         btn_resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (PlayMusicActivity.songList == null)
+                    return;
+
                 Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
                 resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
                 startActivity(resumeMusicIntent);
@@ -68,12 +72,10 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 startActivity(playmusicIntent);
             }
         });
-        btn_signIn.setOnClickListener(new View.OnClickListener()
-        {
+        btn_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                Intent driveintent = new Intent(getApplicationContext(),DriveActivity.class);
+            public void onClick(View view) {
+                Intent driveintent = new Intent(getApplicationContext(), DriveActivity.class);
                 startActivity(driveintent);
             }
         });
@@ -84,6 +86,19 @@ public class OfflineMusicActivity extends AppCompatActivity {
         updateSongList();
     }
 
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        if(PlayMusicActivity.songList==null)
+        {
+            btn_resume.setVisibility(View.GONE);
+        }
+        else
+        {
+            btn_resume.setVisibility(View.VISIBLE);
+        }
+    }
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
 
     private void AskPermission() {
@@ -147,8 +162,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
                 String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 
-                Song song = new Song();
-                song.Link = link;
+                Song song = new Song(link);
                 if (title != null)
                     song.Title = title;
                 if (artist != null)
