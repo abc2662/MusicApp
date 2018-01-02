@@ -7,13 +7,16 @@ import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -28,17 +31,29 @@ public class OfflineMusicActivity extends AppCompatActivity {
     private SearchView searchView;
     private ListView listView;
     public SongAdapter songAdapter;
-    SignInButton signInButton;
+    ImageButton signInButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pick);
+        setContentView(R.layout.activity_offline_music);
         AskPermission();
         listView = (ListView) findViewById(R.id.listViewResults);
         songAdapter = new SongAdapter(this, songList);
-        signInButton = (SignInButton) findViewById(R.id.btnSign_In);
+        signInButton = (ImageButton) findViewById(R.id.btnSignIn);
         listView.setAdapter(songAdapter);
         searchView = (SearchView)findViewById(R.id.svSearch);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listView.getOnItemClickListener().onItemClick(null, null, 0, 0);
+            }
+        });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -50,15 +65,15 @@ public class OfflineMusicActivity extends AppCompatActivity {
             }
 
         });
-        signInButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent driveintent = new Intent(getApplicationContext(),DriveActivity.class);
-                startActivity(driveintent);
-            }
-        });
+//        signInButton.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                Intent driveintent = new Intent(getApplicationContext(),DriveActivity.class);
+//                startActivity(driveintent);
+//            }
+//        });
         listView.setTextFilterEnabled(true);
         setupSearchView();
     }
