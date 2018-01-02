@@ -138,7 +138,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             Drawable drawable = new BitmapDrawable(getResources(),songList.get(songIndex).getImage());
             imgDisc.setImageDrawable(drawable);
             relativeLayout.setBackground(drawable);
-            Blurry.with(getApplicationContext()).from(bitmap).into(imgBlur);
+            Blurry.with(getApplicationContext()).radius(100).from(bitmap).into(imgBlur);
         }
 
 

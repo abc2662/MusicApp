@@ -37,14 +37,14 @@ public class OfflineMusicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline_music);
-        AskPermission();
+
         listView = (ListView) findViewById(R.id.listViewResults);
         songAdapter = new SongAdapter(this, songList);
-        btn_signIn = (ImageButton) findViewById(R.id.btn_drive);
         listView.setAdapter(songAdapter);
-        searchView = (SearchView)findViewById(R.id.svSearch);
-        btn_resume = (ImageButton)findViewById(R.id.btn_resume);
 
+        searchView = (SearchView)findViewById(R.id.svSearch);
+        btn_signIn = (ImageButton) findViewById(R.id.btn_drive);
+        btn_resume = (ImageButton)findViewById(R.id.btn_resume);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -77,34 +77,17 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 startActivity(driveintent);
             }
         });
+
         ViewCompat.setNestedScrollingEnabled(listView, true);
         listView.setTextFilterEnabled(true);
         setupSearchView();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (AskPermission()&&songList.isEmpty()) {
-            getPlayList();
-            listView.setAdapter(songAdapter);
-        }
+        updateSongList();
     }
 
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
 
-    private boolean AskPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+    private void AskPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Permission required")
@@ -114,13 +97,9 @@ public class OfflineMusicActivity extends AppCompatActivity {
                         .show();
             }
 
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    READ_EXTERNAL_STORAGE_PERMISSION_CODE);
-        }
-        return  ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                READ_EXTERNAL_STORAGE_PERMISSION_CODE);
     }
 
     @Override
@@ -132,10 +111,9 @@ public class OfflineMusicActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission granted
-                    getPlayList();
-                    listView.setAdapter(songAdapter);
+                    updateSongList();
                 } else {
-                    Log.e("Permisson", "Denied");
+                    Log.e("Permission", "Denied");
                 }
                 break;
             }
@@ -146,7 +124,15 @@ public class OfflineMusicActivity extends AppCompatActivity {
     }
 
     public ArrayList<Song> songList = new ArrayList<Song>();
-    public ArrayList<Song> getPlayList() {
+    public void updateSongList() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            AskPermission();
+            return;
+        }
+
+        songList.clear();
         String localMusicPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
         Log.w("Files", "Path: " + localMusicPath);
         File directory = new File(localMusicPath);
@@ -166,13 +152,12 @@ public class OfflineMusicActivity extends AppCompatActivity {
 
                 songList.add(song);
             }
+
+            songAdapter.notifyDataSetChanged();
         }
-        // return songs list array
-        return songList;
     }
 
-    public void setupSearchView()
-    {
+    public void setupSearchView() {
         //searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
 
@@ -186,17 +171,17 @@ public class OfflineMusicActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (TextUtils.isEmpty(newText)){
+                if (TextUtils.isEmpty(newText)) {
                     songAdapter.getFilter().filter(null);
-                }else {
+                } else {
                     songAdapter.getFilter().filter(newText);
                     listView.deferNotifyDataSetChanged();
                 }
                 return true;
-            };
-
+            }
         });
         //searchView.setSubmitButtonEnabled(true);
         searchView.setQueryHint("Search Here");

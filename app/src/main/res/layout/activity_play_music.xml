@@ -12,7 +12,7 @@
         android:adjustViewBounds="true"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:background="@color/colorBack"/>
     <LinearLayout
         android:id="@+id/layout_Disc"
@@ -67,11 +67,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_Disc"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:background="@android:color/transparent"
         android:orientation="vertical"
-        android:paddingBottom="10sp">
+        android:gravity="center">
 
         <RelativeLayout
             android:id="@+id/layout_Time"
