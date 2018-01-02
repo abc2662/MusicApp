@@ -38,6 +38,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class DriveActivity extends AppCompatActivity {
     public boolean signedIn;
     DriveResourceClient mDriveResourceClient;
@@ -128,7 +130,7 @@ public class DriveActivity extends AppCompatActivity {
     private void initializeComponents() {
         //findViewByID
         tvUserName = (TextView) findViewById(R.id.tvName);
-        imgUserImg = (ImageView) findViewById(R.id.imgUser);
+        imgUserImg = (CircleImageView) findViewById(R.id.imgUser);
         //imgUserImg.setImageResource(R.drawable.ic_launcher_background);
         //signInButton = (SignInButton) findViewById(R.id.btnSignIn);
         signOutButton = (Button) findViewById(R.id.btnSign_Out);

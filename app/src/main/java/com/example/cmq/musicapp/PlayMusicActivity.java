@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -132,18 +133,15 @@ public class PlayMusicActivity extends AppCompatActivity {
 
 
     public void UpdateUI() {
-        if(songList.get(songIndex).getImage()!=null)
-        {
+        if(activityRequest == Options.DEFAULT && songList.get(songIndex).getImage() != null) {
             Bitmap bitmap = songList.get(songIndex).getImage();
-            Drawable drawable = new BitmapDrawable(getResources(),songList.get(songIndex).getImage());
+            Drawable drawable = new BitmapDrawable(getResources(), songList.get(songIndex).getImage());
             imgDisc.setImageDrawable(drawable);
             relativeLayout.setBackground(drawable);
             Blurry.with(getApplicationContext()).radius(100).from(bitmap).into(imgBlur);
+            txtArtist.setText(songList.get(songIndex).Artist);
         }
-
-
         txtTitle.setText(songList.get(songIndex).Title);
-        txtArtist.setText(songList.get(songIndex).Artist);
         setTime();
         updateTime();
     }
