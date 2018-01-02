@@ -64,7 +64,7 @@
             android:maxLength="25"
             android:padding="5sp"
             android:textAlignment="center"
-            android:textColor="@color/colorHintText"
+            android:textColor="@color/colorWhite"
             android:textSize="24sp" />
     </LinearLayout>
 
