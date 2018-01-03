@@ -53,7 +53,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
 
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
 
-    private void AskPermission() {
+    private void askPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -95,7 +95,7 @@ public class OfflineMusicActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            AskPermission();
+            askPermission();
             return;
         }
 
