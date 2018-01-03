@@ -53,13 +53,13 @@
 
                     <ImageButton
                         android:id="@+id/btn_drive"
-                        android:layout_width="40sp"
-                        android:layout_height="40sp"
+                        android:layout_width="50sp"
+                        android:layout_height="50sp"
                         android:layout_margin="10sp"
                         android:background="@null"
                         android:contentDescription="@null"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/googleg_standard_color_18" />
+                        android:src="@drawable/google_drive_logo" />
 
                     <SearchView
                         android:id="@+id/sv_search"
