@@ -87,13 +87,11 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40sp"
-                android:layout_height="40sp"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="8sp"
                 android:layout_marginEnd="8sp"
                 android:layout_marginStart="16sp"
-                android:layout_marginTop="8sp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/google_drive_logo" />
 
@@ -104,6 +102,7 @@
                 android:layout_marginEnd="16sp"
                 android:layout_marginStart="8sp"
                 android:layout_marginTop="16sp"
+                android:layout_gravity="center_vertical"
                 android:text="@string/drive_music"
                 android:textColor="@color/colorText"
                 android:textSize="16sp"

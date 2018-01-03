@@ -33,6 +33,7 @@ public class Song implements Parcelable {
     }
 
     public String getTitle() { return Title; }
+    @NonNull
     public String getLink() { return Link; }
     public String getArtist() { return Artist; }
 
