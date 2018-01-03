@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyMusicApp</string>
+    <string name="app_name">BlueGreen Music</string>
     <string name="fontFamily">serif</string>
     <string name="text_Clock">00:00</string>
     <string name="sever_client_id">666582323887-tti3b01halai5q02i743jc4o5lbtlobj.apps.googleusercontent.com</string>

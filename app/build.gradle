@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
+    lintOptions {
+        disable 'MissingTranslation'
+    }
     signingConfigs {
         config {
             keyAlias 'mykeystore'
