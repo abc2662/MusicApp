@@ -25,7 +25,6 @@
             android:paddingRight="16dp"
             android:paddingTop="8dp"
             android:paddingBottom="0dp"
-            android:text="songTitle"
             android:textAlignment="viewStart"
             android:textColor="@color/colorText2"
             android:textStyle="bold" />
@@ -39,7 +38,6 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="0dp"
-            android:text="songArtist"
             android:textAlignment="viewStart"
             android:textColor="@color/colorBlack"
             android:textStyle="italic" />

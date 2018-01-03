@@ -3,10 +3,8 @@ package com.example.cmq.musicapp;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
-import android.app.VoiceInteractor;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -15,7 +13,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -64,7 +61,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     public static boolean shuffle = false;
     public static int repeatOption = 0;
     public int activityRequest;
-    public Intent musiclinkIntent;
+    public Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,19 +69,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_play_music);
         createMediaPlayer();
         initializeComponents();
-    }
 
-    private void getPlayList() {
-        songList = musiclinkIntent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
-        songIndex = musiclinkIntent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
-    }
+        RefreshUI();
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        musiclinkIntent = getIntent();
-        activityRequest = musiclinkIntent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
+        intent = getIntent();
+        activityRequest = intent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
 
         switch (activityRequest) {
             case Options.STREAM: {
@@ -101,28 +90,10 @@ public class PlayMusicActivity extends AppCompatActivity {
                 break;
             }
             case Options.RESUME: {
-                txtTitle.setText(songList.get(songIndex).Title);
+                txtTitle.setText(songList.get(songIndex).getTitle());
                 if (mediaPlayer.isPlaying()) {
                     btnPlay.setImageResource(R.drawable.pause);
                     anim_disc.start();
-                }
-
-                //Restore loop button
-                switch (repeatOption) {
-                    case RepeatOptions.REPEAT_ONE:
-                        btnLoop.setImageResource(R.drawable.replay_loop);
-                        break;
-                    case RepeatOptions.NO_REPEAT:
-                        btnLoop.setImageResource(R.drawable.replay);
-                        break;
-                    case RepeatOptions.REPEAT_ALL:
-                        btnLoop.setImageResource(R.drawable.replay_selected);
-                        break;
-                }
-
-                //Restore shuffle button
-                if (shuffle) {
-                    btnShuffle.setImageResource(R.drawable.shuffle_selected);
                 }
 
                 setTime();
@@ -132,6 +103,30 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
     }
 
+    private void getPlayList() {
+        songList = intent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
+        songIndex = intent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
+    }
+
+    public void RefreshUI() {
+        //Restore loop button
+        switch (repeatOption) {
+            case RepeatOptions.REPEAT_ONE:
+                btnLoop.setImageResource(R.drawable.replay_loop);
+                break;
+            case RepeatOptions.NO_REPEAT:
+                btnLoop.setImageResource(R.drawable.replay);
+                break;
+            case RepeatOptions.REPEAT_ALL:
+                btnLoop.setImageResource(R.drawable.replay_selected);
+                break;
+        }
+
+        //Restore shuffle button
+        if (shuffle) {
+            btnShuffle.setImageResource(R.drawable.shuffle_selected);
+        }
+    }
 
     public void UpdateUI() {
         if(activityRequest == Options.DEFAULT && songList.get(songIndex).getImage() != null) {
@@ -141,8 +136,10 @@ public class PlayMusicActivity extends AppCompatActivity {
             relativeLayout.setBackground(drawable);
             Blurry.with(getApplicationContext()).radius(80).from(bitmap).into(imgBlur);
             txtArtist.setText(songList.get(songIndex).Artist);
+            Blurry.with(getApplicationContext()).radius(100).from(bitmap).into(imgBlur);
+            txtArtist.setText(songList.get(songIndex).getLink());
         }
-        txtTitle.setText(songList.get(songIndex).Title);
+        txtTitle.setText(songList.get(songIndex).getLink());
         setTime();
         updateTime();
     }
@@ -173,7 +170,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             return;
         }
 
-        mediaPlayer = MediaPlayer.create(PlayMusicActivity.this, Uri.parse(songList.get(songIndex).Link));
+        mediaPlayer = MediaPlayer.create(PlayMusicActivity.this, Uri.parse(songList.get(songIndex).getLink()));
     }
 
     public void playMusic(int index) {
@@ -182,7 +179,7 @@ public class PlayMusicActivity extends AppCompatActivity {
 
             try {
                 /* load the new source */
-                mediaPlayer.setDataSource(songList.get(index).Link);
+                mediaPlayer.setDataSource(songList.get(index).getLink());
 
                 /* Prepare the mediaPlayer */
                 mediaPlayer.prepareAsync();
@@ -250,7 +247,7 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     public void changeRepeatOption(int index) {
-        switch (repeatOption) {
+        switch (index) {
             case RepeatOptions.NO_REPEAT: {
                 btnLoop.setImageResource(R.drawable.replay);
                 mediaPlayer.setLooping(false);
@@ -269,13 +266,13 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
     }
 
-    TextView txtTitle, txtTimeProcess, txtTimeTotal, txtArtist;
-    RelativeLayout relativeLayout;
-    SeekBar sbProcess;
-    ImageButton btnPrev, btnPlay, btnNext, btnShuffle, btnLoop, btnList, btnLike;
-    ImageView imgDisc;
-    ImageView imgBlur;
-    AnimatorSet anim_disc;
+    private TextView txtTitle, txtTimeProcess, txtTimeTotal, txtArtist;
+    private RelativeLayout relativeLayout;
+    private SeekBar sbProcess;
+    private ImageButton btnPrev, btnPlay, btnNext, btnShuffle, btnLoop, btnList;
+    private ImageView imgDisc;
+    private ImageView imgBlur;
+    private AnimatorSet anim_disc;
 
     private void initializeComponents() {
         txtTitle = (TextView) findViewById(R.id.txt_TitleSong);
