@@ -16,6 +16,12 @@ public class Song implements Parcelable {
         Link = link;
         Title = "";
         Artist = "";
+
+        int beginIndex = link.lastIndexOf('/');
+        int endIndex = link.lastIndexOf('.');
+        if (!(beginIndex < 0 || endIndex < 0)) {
+            Title = link.substring(beginIndex + 1, endIndex);
+        }
     }
 
     public Song(Parcel source) {
