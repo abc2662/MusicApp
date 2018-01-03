@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -99,9 +100,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                     btnPlay.setImageResource(R.drawable.pause);
                     anim_disc.start();
                 }
-
-                setTime();
-                updateTime();
+                UpdateUI();
                 break;
             }
         }
@@ -133,17 +132,18 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     public void UpdateUI() {
-        if(activityRequest == Options.DEFAULT ) {
-            txtArtist.setText(songList.get(songIndex).getArtist());
-            if (songList.get(songIndex).getImage() != null) {
-                Bitmap bitmap = songList.get(songIndex).getImage();
-                Drawable drawable = new BitmapDrawable(getResources(), songList.get(songIndex).getImage());
-                imgDisc.setImageDrawable(drawable);
-                Blurry.with(getApplicationContext()).radius(80).from(bitmap).into(imgBlur);
-            }
+        imgDisc.setImageResource(R.drawable.cd_512);
+        imgBlur.setImageResource(R.color.colorBack);
+        if(activityRequest != Options.STREAM &&
+                songList.get(songIndex).getImage() != null) {
+            Bitmap bitmap = songList.get(songIndex).getImage();
+            Drawable drawable = new BitmapDrawable(getResources(), songList.get(songIndex).getImage());
+            imgDisc.setImageDrawable(drawable);
+            Blurry.with(getApplicationContext()).radius(80).from(bitmap).into(imgBlur);
         }
 
         txtTitle.setText(songList.get(songIndex).getTitle());
+        txtArtist.setText(songList.get(songIndex).getArtist());
         setTime();
         updateTime();
     }
@@ -204,10 +204,10 @@ public class PlayMusicActivity extends AppCompatActivity {
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer player) {
-                player.start();
                 UpdateUI();
                 btnPlay.setImageResource(R.drawable.pause);
                 anim_disc.start();
+                player.start();
             }
         });
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -305,12 +305,12 @@ public class PlayMusicActivity extends AppCompatActivity {
                     anim_disc.pause();
                     btnPlay.setImageResource(R.drawable.play);
                 } else {
-                    mediaPlayer.start();
                     btnPlay.setImageResource(R.drawable.pause);
                     if (anim_disc.isPaused())
                         anim_disc.resume();
                     else
                         anim_disc.start();
+                    mediaPlayer.start();
                 }
             }
         });
