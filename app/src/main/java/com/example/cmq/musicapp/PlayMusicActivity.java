@@ -91,6 +91,10 @@ public class PlayMusicActivity extends AppCompatActivity {
             }
             case Options.RESUME: {
                 txtTitle.setText(songList.get(songIndex).getTitle());
+                if(!songList.get(songIndex).getArtist().equals(""))
+                {
+                    txtArtist.setText(songList.get(songIndex).getArtist());
+                }
                 if (mediaPlayer.isPlaying()) {
                     btnPlay.setImageResource(R.drawable.pause);
                     anim_disc.start();
@@ -129,16 +133,17 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     public void UpdateUI() {
-        if(activityRequest == Options.DEFAULT && songList.get(songIndex).getImage() != null) {
-            Bitmap bitmap = songList.get(songIndex).getImage();
-            Drawable drawable = new BitmapDrawable(getResources(), songList.get(songIndex).getImage());
-            imgDisc.setImageDrawable(drawable);
-            relativeLayout.setBackground(drawable);
-            Blurry.with(getApplicationContext()).radius(80).from(bitmap).into(imgBlur);
+        if(activityRequest == Options.DEFAULT ) {
             txtArtist.setText(songList.get(songIndex).getArtist());
-            txtArtist.setText(songList.get(songIndex).getLink());
+            if (songList.get(songIndex).getImage() != null) {
+                Bitmap bitmap = songList.get(songIndex).getImage();
+                Drawable drawable = new BitmapDrawable(getResources(), songList.get(songIndex).getImage());
+                imgDisc.setImageDrawable(drawable);
+                Blurry.with(getApplicationContext()).radius(80).from(bitmap).into(imgBlur);
+            }
         }
-        txtTitle.setText(songList.get(songIndex).getLink());
+
+        txtTitle.setText(songList.get(songIndex).getTitle());
         setTime();
         updateTime();
     }
@@ -266,7 +271,6 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     private TextView txtTitle, txtTimeProcess, txtTimeTotal, txtArtist;
-    private RelativeLayout relativeLayout;
     private SeekBar sbProcess;
     private ImageButton btnPrev, btnPlay, btnNext, btnShuffle, btnLoop, btnList;
     private ImageView imgDisc;
@@ -287,7 +291,6 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnLoop = (ImageButton) findViewById(R.id.btn_loop);
         imgDisc = (CircleImageView) findViewById(R.id.img_Disc);
         imgBlur = (ImageView) findViewById(R.id.img_blur);
-        relativeLayout = (RelativeLayout)findViewById(R.id.layout_parent);
         anim_disc = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.disc_rotation);
         anim_disc.setTarget(imgDisc);
         anim_disc.start();
