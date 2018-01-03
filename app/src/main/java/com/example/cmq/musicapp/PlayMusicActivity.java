@@ -139,7 +139,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             Drawable drawable = new BitmapDrawable(getResources(), songList.get(songIndex).getImage());
             imgDisc.setImageDrawable(drawable);
             relativeLayout.setBackground(drawable);
-            Blurry.with(getApplicationContext()).radius(100).from(bitmap).into(imgBlur);
+            Blurry.with(getApplicationContext()).radius(80).from(bitmap).into(imgBlur);
             txtArtist.setText(songList.get(songIndex).Artist);
         }
         txtTitle.setText(songList.get(songIndex).Title);
