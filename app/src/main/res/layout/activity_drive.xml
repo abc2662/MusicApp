@@ -13,12 +13,12 @@
         android:layout_height="@dimen/app_bar_height"
         android:background="@drawable/user_banner"
         android:fitsSystemWindows="true"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/btnBack"
+        android:id="@+id/btn_back"
         android:layout_width="40sp"
         android:layout_height="40sp"
         android:layout_marginStart="10sp"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/btnResume"
+        android:id="@+id/btn_resume"
         android:layout_width="50sp"
         android:layout_height="50sp"
         android:layout_marginEnd="10sp"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/imgUser"
+        android:id="@+id/img_user"
         android:layout_width="100sp"
         android:layout_height="100sp"
         android:layout_gravity="center_horizontal"
@@ -54,7 +54,7 @@
         app:layout_constraintTop_toTopOf="@+id/img_banner_drive" />
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8sp"
@@ -66,7 +66,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgUser" />
+        app:layout_constraintTop_toBottomOf="@+id/img_user" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
         app:layout_constraintTop_toBottomOf="@id/img_banner_drive">
 
         <LinearLayout
-            android:id="@+id/btnMyDrive"
+            android:id="@+id/btn_my_drive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/colorText2"
@@ -111,17 +111,17 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnSign_Out"
+            android:id="@+id/btn_sign_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="8sp"
             android:background="@android:color/transparent"
             android:onClick="btnSignOut_OnClick"
             android:text="@string/sign_out"
             android:textColor="@color/colorText2"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
 

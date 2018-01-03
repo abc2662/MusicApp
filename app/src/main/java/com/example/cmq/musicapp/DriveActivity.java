@@ -127,12 +127,12 @@ public class DriveActivity extends AppCompatActivity {
     }
     private void initializeComponents() {
         //findViewByID
-        tvUserName = (TextView) findViewById(R.id.tvName);
-        imgUserImg = (CircleImageView) findViewById(R.id.imgUser);
-        signOutButton = (Button) findViewById(R.id.btnSign_Out);
-        btnMyDrive = (LinearLayout) findViewById(R.id.btnMyDrive);
-        btnBack = (ImageButton)findViewById(R.id.btnBack);
-        imgResume = (ImageButton) findViewById(R.id.btnResume);
+        tvUserName = (TextView) findViewById(R.id.tv_name);
+        imgUserImg = (CircleImageView) findViewById(R.id.img_user);
+        signOutButton = (Button) findViewById(R.id.btn_sign_out);
+        btnMyDrive = (LinearLayout) findViewById(R.id.btn_my_drive);
+        btnBack = (ImageButton)findViewById(R.id.btn_back);
+        imgResume = (ImageButton) findViewById(R.id.btn_resume);
 
         AnimatorSet anim_disc = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.disc_rotation);
         anim_disc.setTarget(imgResume);

@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/img_banner_drive"
+        android:id="@+id/img_banner"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
         android:fitsSystemWindows="true"
@@ -23,6 +23,7 @@
             app:toolbarId="@+id/toolbar">
 
             <ImageView
+                android:id="@+id/img_banner_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
@@ -61,7 +62,7 @@
                         android:src="@drawable/googleg_standard_color_18" />
 
                     <SearchView
-                        android:id="@+id/svSearch"
+                        android:id="@+id/sv_search"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layoutDirection="ltr"
