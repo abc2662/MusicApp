@@ -16,7 +16,9 @@ public class Song implements Parcelable {
         Link = link;
         Title = "";
         Artist = "";
-
+        if(link.contains("http")) {
+            return;
+        }
         int beginIndex = link.lastIndexOf('/');
         int endIndex = link.lastIndexOf('.');
         if (!(beginIndex < 0 || endIndex < 0)) {

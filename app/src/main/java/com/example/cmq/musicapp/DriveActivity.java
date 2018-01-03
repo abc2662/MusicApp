@@ -305,7 +305,7 @@ public class DriveActivity extends AppCompatActivity {
                                 Log.w("MimeType", metadata.getMimeType());
 
                                 Song song = new Song(link);
-                                song.setTitle(title);
+                                song.setTitle(title.substring(0,title.length()-4));
 
                                 ArrayList<Song> songList = new ArrayList<>();
                                 songList.add(song);
