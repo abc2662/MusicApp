@@ -5,10 +5,11 @@
 
     <ImageView
         android:id="@+id/itemImage"
-        android:layout_width="96dp"
+        android:layout_width="51dp"
         android:layout_height="match_parent"
         android:padding="5dp"
-        android:src="@drawable/icon_music" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_app" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,30 +21,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLength="20"
-            android:padding="@dimen/fab_margin"
-            android:text="songTitle"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="0dp"
             android:textAlignment="viewStart"
             android:textColor="@color/colorText2"
             android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/itemArtist"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/itemArtist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLength="20"
-                android:padding="@dimen/fab_margin"
-                android:text="songTitle"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/colorText2"
-                android:textStyle="italic" />
-
-
-        </LinearLayout>
+            android:maxLength="20"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="0dp"
+            android:textAlignment="viewStart"
+            android:textColor="@color/colorBlack"
+            android:textStyle="italic" />
 
     </LinearLayout>
 

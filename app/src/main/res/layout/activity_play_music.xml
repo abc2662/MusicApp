@@ -1,160 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.cmq.musicapp.PlayMusicActivity">
-    <!--Header: Title, Timer, Option-->
+    <ImageView
+        android:id="@+id/img_blur"
+        android:adjustViewBounds="true"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:background="@color/colorBack"/>
+
     <LinearLayout
         android:id="@+id/layout_Disc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorHighestDark"
+        android:layout_marginEnd="0sp"
+        android:layout_marginStart="0sp"
+        android:layout_marginTop="0sp"
         android:orientation="vertical"
-        android:padding="10sp">
+        android:padding="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/btn_list"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/list2" />
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/img_Disc"
             android:layout_width="300sp"
             android:layout_height="300sp"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="@null"
-            android:src="@drawable/cd_512" />
+            android:src="@drawable/cd_512"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2sp" />
+
+        <TextView
+            android:id="@+id/txt_TitleSong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:maxLength="25"
+            android:padding="5sp"
+            android:textAlignment="center"
+            android:textColor="@color/colorText2"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txt_Artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="25"
+            android:padding="5sp"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="24sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/txt_TitleSong"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout_Disc"
-        android:fontFamily="@string/fontFamily"
-        android:maxLength="25"
-        android:padding="5sp"
-        android:text="@string/song_name"
-        android:textAlignment="center"
-        android:textColor="@color/colorText2"
-        android:textSize="24sp" />
-    <!--Media Controller: Processing bar, Time of song, Button control-->
+        android:layout_marginBottom="0sp"
+        android:layout_marginEnd="0sp"
+        android:layout_marginStart="0sp"
+        android:layout_marginTop="0sp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_Disc">
 
-    <RelativeLayout
-        android:id="@+id/layout_Time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_Control"
-        android:orientation="horizontal"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:padding="10sp">
-
-        <TextView
-            android:id="@+id/txt_TimeProcess"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/text_Clock"
-            android:textColor="@color/colorText2"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <SeekBar
-            android:id="@+id/sb_Process"
+        <RelativeLayout
+            android:id="@+id/layout_Time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/txt_TimeProcess"
-            android:layout_toStartOf="@+id/txt_TimeTotal"/>
+            android:orientation="horizontal"
+            android:padding="10sp">
 
-        <TextView
-            android:id="@+id/txt_TimeTotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_Clock"
-            android:textColor="@color/colorText2"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_alignParentEnd="true"/>
-    </RelativeLayout>
-    <LinearLayout
-        android:id="@+id/layout_Control"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+            <TextView
+                android:id="@+id/txt_TimeProcess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/text_Clock"
+                android:textColor="@color/colorWhite"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <SeekBar
+                android:id="@+id/sb_Process"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/txt_TimeProcess"
+                android:layout_toStartOf="@+id/txt_TimeTotal"
+                android:progressTint="@color/colorWhite"
+                android:secondaryProgressTint="@color/colorWhite"
+                android:thumbTint="@color/colorWhite" />
+
+            <TextView
+                android:id="@+id/txt_TimeTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/text_Clock"
+                android:textColor="@color/colorWhite"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
         <LinearLayout
+            android:id="@+id/layout_Control"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal"
-            tools:ignore="UnknownId">
+            android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/btn_random"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10sp"
+                android:id="@+id/btn_shuffle"
+                android:layout_width="0sp"
+                android:layout_height="32sp"
                 android:layout_weight="1"
                 android:background="@null"
+                android:scaleType="fitCenter"
                 android:src="@drawable/shuffle"
                 tools:ignore="ContentDescription" />
 
             <ImageButton
                 android:id="@+id/btn_prev"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10sp"
+                android:layout_width="0sp"
+                android:layout_height="53dp"
                 android:layout_weight="1"
                 android:background="@null"
+                android:scaleType="fitCenter"
                 android:src="@drawable/back"
                 tools:ignore="ContentDescription" />
 
             <ImageButton
                 android:id="@+id/btn_play"
-                android:layout_width="wrap_content"
+                android:layout_width="0sp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10sp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:src="@drawable/play"
                 tools:ignore="ContentDescription" />
+
             <ImageButton
                 android:id="@+id/btn_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10sp"
+                android:layout_width="0sp"
+                android:layout_height="48sp"
                 android:layout_weight="1"
                 android:background="@null"
+                android:scaleType="fitCenter"
                 android:src="@drawable/next"
                 tools:ignore="ContentDescription" />
 
             <ImageButton
                 android:id="@+id/btn_loop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10sp"
+                android:layout_width="0sp"
+                android:layout_height="32sp"
                 android:layout_weight="1"
                 android:background="@null"
+                android:scaleType="fitCenter"
                 android:src="@drawable/replay"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/list1"
-                android:layout_marginStart="25sp"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="25sp"
-                android:src="@drawable/like"/>
-        </RelativeLayout>
     </LinearLayout>
-
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
