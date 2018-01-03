@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -139,7 +140,10 @@ public class PlayMusicActivity extends AppCompatActivity {
             Bitmap bitmap = songList.get(songIndex).getImage();
             Drawable drawable = new BitmapDrawable(getResources(), songList.get(songIndex).getImage());
             imgDisc.setImageDrawable(drawable);
-            Blurry.with(getApplicationContext()).radius(80).from(bitmap).into(imgBlur);
+            Blurry.with(getApplicationContext())
+                    .radius(80)
+                    .from(bitmap)
+                    .into(imgBlur);
         }
 
         txtTitle.setText(songList.get(songIndex).getTitle());
@@ -395,6 +399,5 @@ public class PlayMusicActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 }
