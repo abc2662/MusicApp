@@ -188,9 +188,9 @@ public class PlayMusicActivity extends AppCompatActivity {
                 /* Prepare the mediaPlayer */
                 mediaPlayer.prepareAsync();
             } catch (IOException e) {
-                Toast.makeText(this, "Unexpected error: File path not found.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.error_IOException), Toast.LENGTH_LONG).show();
             } catch (IllegalStateException e) {
-                Toast.makeText(this, "Unexpected error.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
             }
         }
     }

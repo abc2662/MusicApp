@@ -71,7 +71,6 @@ public class DriveActivity extends AppCompatActivity {
 
         if (account != null) {
             signedIn = true;
-            //signInButton.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
             mDriveClient = Drive.getDriveClient(getApplicationContext(), account);
             mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), account);
@@ -84,6 +83,7 @@ public class DriveActivity extends AppCompatActivity {
 
         } else {
             signedIn = false;
+            signOutButton.setVisibility(View.GONE);
         }
     }
 
@@ -122,7 +122,7 @@ public class DriveActivity extends AppCompatActivity {
                         }
                     });
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Sign In needed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Sign in needed", Toast.LENGTH_SHORT).show();
         }
     }
     private void initializeComponents() {
@@ -191,7 +191,7 @@ public class DriveActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "signInResult:failed ");
-                        finish();
+                        Toast.makeText(getApplicationContext(), getString(R.string.signInFailed), Toast.LENGTH_LONG).show();
                     }
                 });
                 //handleSignInResult(task);
@@ -227,7 +227,7 @@ public class DriveActivity extends AppCompatActivity {
         mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(getApplicationContext(), "Signed Out", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.signOutSuccess), Toast.LENGTH_LONG).show();
                 Log.w("On", "SignOut Success!");
                 signedIn = false;
                 signOutButton.setVisibility(View.GONE);
@@ -238,7 +238,6 @@ public class DriveActivity extends AppCompatActivity {
     }
 
     public void btnMyDrive_OnClick(View view) {
-
         try {
             pickFile()
                     .addOnSuccessListener(this,

@@ -6,4 +6,9 @@
     <string name="drive_music">My Google Drive Music</string>
     <string name="sign_out">Sign Out</string>
     <string name="search_hint">Search songs or artists</string>
+    <string name="signInFailed">Unfortunately, you can\'t use that now.</string>
+    <string name="signInNeeded">You need to sign in.</string>
+    <string name="signOutSuccess">You\'ve signed out.</string>
+    <string name="error">Unexpected error.</string>
+    <string name="error_IOException">Unexpected error: File path not found.</string>
 </resources>
