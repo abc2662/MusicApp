@@ -76,16 +76,16 @@ public class PlayMusicActivity extends AppCompatActivity {
 
         switch (activityRequest) {
             case Options.STREAM: {
-                getPlayList();
                 btnNext.setEnabled(false);
                 btnPrev.setEnabled(false);
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                playMusic(0);
+                getPlayList();
+                playMusic();
                 break;
             }
             case Options.DEFAULT: {
                 getPlayList();
-                playMusic(songIndex);
+                playMusic();
                 break;
             }
             case Options.RESUME: {
@@ -130,21 +130,25 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     public void UpdateUI() {
+        Song currentSong = songList.get(findSongIndex());
+
         imgDisc.setImageResource(R.drawable.cd_512);
         imgBlur.setImageResource(R.color.colorBack);
-        if(activityRequest != Options.STREAM &&
-                songList.get(songIndex).getImage() != null) {
-            Bitmap bitmap = songList.get(songIndex).getImage();
-            Drawable drawable = new BitmapDrawable(getResources(), songList.get(songIndex).getImage());
-            imgDisc.setImageDrawable(drawable);
-            Blurry.with(getApplicationContext())
-                    .radius(80)
-                    .from(bitmap)
-                    .into(imgBlur);
+        if(activityRequest != Options.STREAM) {
+            Bitmap bitmap = currentSong.getImage();
+
+            if (bitmap != null) {
+                Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                imgDisc.setImageDrawable(drawable);
+                Blurry.with(getApplicationContext())
+                        .radius(80)
+                        .from(bitmap)
+                        .into(imgBlur);
+            }
         }
 
-        txtTitle.setText(songList.get(songIndex).getTitle());
-        txtArtist.setText(songList.get(songIndex).getArtist());
+        txtTitle.setText(currentSong.getTitle());
+        txtArtist.setText(currentSong.getArtist());
         setTime();
         updateTime();
     }
@@ -178,21 +182,19 @@ public class PlayMusicActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(PlayMusicActivity.this, Uri.parse(songList.get(songIndex).getLink()));
     }
 
-    public void playMusic(int index) {
-        if (index >= 0 && index < songList.size()) {
-            stopMusic();
+    public void playMusic() {
+        stopMusic();
 
-            try {
+        try {
                 /* load the new source */
-                mediaPlayer.setDataSource(songList.get(index).getLink());
+            mediaPlayer.setDataSource(songList.get(findSongIndex()).getLink());
 
                 /* Prepare the mediaPlayer */
-                mediaPlayer.prepareAsync();
-            } catch (IOException e) {
-                Toast.makeText(this, getString(R.string.error_IOException), Toast.LENGTH_LONG).show();
-            } catch (IllegalStateException e) {
-                Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
-            }
+            mediaPlayer.prepareAsync();
+        } catch (IOException e) {
+            Toast.makeText(this, getString(R.string.error_IOException), Toast.LENGTH_LONG).show();
+        } catch (IllegalStateException e) {
+            Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -325,7 +327,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                     songIndex = 0;
                 }
 
-                playMusic(findSongIndex());
+                playMusic();
             }
         });
 
@@ -339,7 +341,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                     songIndex = songList.size() - 1;
                 }
 
-                playMusic(findSongIndex());
+                playMusic();
             }
         });
 
