@@ -95,7 +95,7 @@
                 android:layout_marginStart="16sp"
                 android:layout_marginTop="8sp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/googleg_standard_color_18" />
+                android:src="@drawable/google_drive_logo" />
 
             <TextView
                 android:layout_width="wrap_content"

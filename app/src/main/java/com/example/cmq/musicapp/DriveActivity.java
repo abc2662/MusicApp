@@ -231,7 +231,7 @@ public class DriveActivity extends AppCompatActivity {
                 Log.w("On", "SignOut Success!");
                 signedIn = false;
                 signOutButton.setVisibility(View.GONE);
-                imgUserImg.setImageResource(R.drawable.default_ava);
+                imgUserImg.setImageResource(R.drawable.account_selected);
                 tvUserName.setText("");
             }
         });
