@@ -6,4 +6,5 @@
     <string name="drive_music">My Google Drive Music</string>
     <string name="sign_out">Sign Out</string>
     <string name="search_hint">Search songs or artists</string>
+    <string name="signInFailed">Unfortunately, you can\'t use that now.</string>
 </resources>
