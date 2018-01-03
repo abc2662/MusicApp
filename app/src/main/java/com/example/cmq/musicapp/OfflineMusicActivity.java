@@ -1,6 +1,8 @@
 package com.example.cmq.musicapp;
 
 import android.Manifest;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,6 +46,10 @@ public class OfflineMusicActivity extends AppCompatActivity {
         ImageButton btn_signIn = (ImageButton) findViewById(R.id.btn_drive);
         btn_resume = (ImageButton) findViewById(R.id.btn_resume);
 
+        AnimatorSet anim_disc = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.disc_rotation);
+        anim_disc.setTarget(btn_resume);
+        anim_disc.start();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -84,9 +90,9 @@ public class OfflineMusicActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart()
+    protected void onResume()
     {
-        super.onStart();
+        super.onResume();
         if(PlayMusicActivity.songList==null)
         {
             btn_resume.setVisibility(View.GONE);
@@ -96,6 +102,15 @@ public class OfflineMusicActivity extends AppCompatActivity {
             btn_resume.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        PlayMusicActivity.mediaPlayer.stop();
+        PlayMusicActivity.mediaPlayer.release();
+    }
+
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
 
     private void AskPermission() {

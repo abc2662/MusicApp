@@ -1,5 +1,7 @@
 package com.example.cmq.musicapp;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.net.Uri;
@@ -83,39 +85,18 @@ public class DriveActivity extends AppCompatActivity {
         } else {
             signedIn = false;
         }
-        btnMyDrive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!signedIn)
-                {
-                    signIn();
-                }
-                else
-                {
-                    openFile();
-                }
-            }
-        });
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
+
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
-        if(PlayMusicActivity.songList==null)
-        {
-         imgResume.setVisibility(View.GONE);
-        }
-        else
-        {
+        if (PlayMusicActivity.songList == null) {
+            imgResume.setVisibility(View.GONE);
+        } else {
             imgResume.setVisibility(View.VISIBLE);
         }
     }
+
     private TextView tvUserName;
     private ImageView imgUserImg;
     //SignInButton signInButton;
@@ -153,7 +134,31 @@ public class DriveActivity extends AppCompatActivity {
         btnBack = (ImageButton)findViewById(R.id.btnBack);
         imgResume = (ImageButton) findViewById(R.id.btnResume);
 
+        AnimatorSet anim_disc = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.disc_rotation);
+        anim_disc.setTarget(imgResume);
+        anim_disc.start();
+
         initializeGoogleDriveSignIn();
+
+        btnMyDrive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!signedIn)
+                {
+                    signIn();
+                }
+                else
+                {
+                    openFile();
+                }
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
     private static final int REQUEST_CODE_SIGN_IN = 100;
     private void signIn() {
