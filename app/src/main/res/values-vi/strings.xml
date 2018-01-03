@@ -2,6 +2,10 @@
 <resources>
     <string name="drive_music">Nhạc Google Drive của tôi</string>
     <string name="sign_out">Đăng xuất</string>
-    <string name="search_hint">Tìm bài hát hoặc ca sĩ...</string>
+    <string name="search_hint">Tìm bài hát hoặc ca sĩ&#8230;</string>
     <string name="signInFailed">Rất tiếc, bạn không thể dùng tính năng này bây giờ.</string>
+    <string name="signInNeeded">Bạn phải đăng nhập.</string>
+    <string name="signOutSuccess">Bạn đã đăng xuất.</string>
+    <string name="error">Có lỗi xảy ra.</string>
+    <string name="error_IOException">Có lỗi xảy ra: Đường dẫn không tồn tại.</string>
 </resources>

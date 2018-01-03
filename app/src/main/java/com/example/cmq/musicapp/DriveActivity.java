@@ -227,7 +227,7 @@ public class DriveActivity extends AppCompatActivity {
         mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(getApplicationContext(), "Signed Out", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.signOutSuccess), Toast.LENGTH_LONG).show();
                 Log.w("On", "SignOut Success!");
                 signedIn = false;
                 signOutButton.setVisibility(View.GONE);
@@ -238,7 +238,6 @@ public class DriveActivity extends AppCompatActivity {
     }
 
     public void btnMyDrive_OnClick(View view) {
-
         try {
             pickFile()
                     .addOnSuccessListener(this,
