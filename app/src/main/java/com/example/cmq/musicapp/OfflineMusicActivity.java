@@ -29,63 +29,11 @@ import java.util.ArrayList;
 
 
 public class OfflineMusicActivity extends AppCompatActivity {
-    private SearchView searchView;
-    private SongAdapter songAdapter;
-    private ImageButton btn_resume;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline_music);
-
-        ListView listView = (ListView) findViewById(R.id.listViewResults);
-        songAdapter = new SongAdapter(this, songList);
-        listView.setAdapter(songAdapter);
-
-        searchView = (SearchView) findViewById(R.id.sv_search);
-        ImageButton btn_signIn = (ImageButton) findViewById(R.id.btn_drive);
-        btn_resume = (ImageButton) findViewById(R.id.btn_resume);
-
-        AnimatorSet anim_disc = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.disc_rotation);
-        anim_disc.setTarget(btn_resume);
-        anim_disc.start();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        btn_resume.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (PlayMusicActivity.songList == null)
-                    return;
-
-                Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-                resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
-                startActivity(resumeMusicIntent);
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent playIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-                playIntent.putParcelableArrayListExtra(PlayMusicActivity.MESSAGE.SONG_LIST, songList);
-                playIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_INDEX, position);
-                playIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.DEFAULT);
-                startActivity(playIntent);
-            }
-        });
-        btn_signIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent driveIntent = new Intent(getApplicationContext(), DriveActivity.class);
-                startActivity(driveIntent);
-            }
-        });
-
-        ViewCompat.setNestedScrollingEnabled(listView, true);
-        listView.setTextFilterEnabled(true);
-        setupSearchView();
+        initializeComponents();
         updateSongList();
     }
 
@@ -101,11 +49,6 @@ public class OfflineMusicActivity extends AppCompatActivity {
         {
             btn_resume.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
@@ -205,6 +148,61 @@ public class OfflineMusicActivity extends AppCompatActivity {
         });
         //searchView.setSubmitButtonEnabled(true);
         searchView.setQueryHint("Search Here");
+    }
+
+    private SearchView searchView;
+    private ImageButton btn_resume;
+    private SongAdapter songAdapter;
+
+    void initializeComponents() {
+        ListView listView = (ListView) findViewById(R.id.listViewResults);
+        songAdapter = new SongAdapter(this, songList);
+        listView.setAdapter(songAdapter);
+
+        searchView = (SearchView) findViewById(R.id.sv_search);
+        ImageButton btn_signIn = (ImageButton) findViewById(R.id.btn_drive);
+        btn_resume = (ImageButton) findViewById(R.id.btn_resume);
+
+        AnimatorSet anim_disc = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.disc_rotation);
+        anim_disc.setTarget(btn_resume);
+        anim_disc.start();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        btn_resume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (PlayMusicActivity.songList == null)
+                    return;
+
+                Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
+                resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
+                startActivity(resumeMusicIntent);
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent playIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
+                playIntent.putParcelableArrayListExtra(PlayMusicActivity.MESSAGE.SONG_LIST, songList);
+                playIntent.putExtra(PlayMusicActivity.MESSAGE.PLAY_INDEX, position);
+                playIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.DEFAULT);
+                startActivity(playIntent);
+            }
+        });
+        btn_signIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent driveIntent = new Intent(getApplicationContext(), DriveActivity.class);
+                startActivity(driveIntent);
+            }
+        });
+
+        ViewCompat.setNestedScrollingEnabled(listView, true);
+        listView.setTextFilterEnabled(true);
+        setupSearchView();
     }
 
     class FileExtensionFilter implements FilenameFilter {
