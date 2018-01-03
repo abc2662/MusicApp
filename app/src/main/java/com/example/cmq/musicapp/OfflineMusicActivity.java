@@ -106,9 +106,6 @@ public class OfflineMusicActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        PlayMusicActivity.mediaPlayer.stop();
-        PlayMusicActivity.mediaPlayer.release();
     }
 
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
