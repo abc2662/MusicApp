@@ -19,6 +19,7 @@ public class MusicService extends Service {
     MediaPlayer mediaPlayer;
     MediaPlayer.OnPreparedListener preparedListener;
     MediaPlayer.OnCompletionListener completionListener;
+    MediaPlayer.OnErrorListener errorListener;
 
     private ArrayList<Song> songList;
     private int songIndex;
@@ -91,6 +92,9 @@ public class MusicService extends Service {
         completionListener = new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                if (mp.getCurrentPosition() != mp.getDuration())
+                    return;
+
                 switch (repeatOption) {
                     case RepeatOptions.NO_REPEAT: {
                         if (!isOnLastSong()) {
@@ -114,6 +118,12 @@ public class MusicService extends Service {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mediaPlayer.start();
+            }
+        };
+        errorListener = new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                return true;
             }
         };
     }
@@ -142,7 +152,7 @@ public class MusicService extends Service {
         Song song = songList.get(findSongIndex());
 
         if (listeners.size() > 0) {
-            for (int i = listeners.size(); i >= 0; i--) {
+            for (int i = listeners.size() - 1; i >= 0; i--) {
                 listeners.get(i).onPlay(song);
             }
         }
@@ -164,7 +174,7 @@ public class MusicService extends Service {
 
     public void stopMusic() {
         if (listeners.size() > 0) {
-            for (int i = listeners.size(); i >= 0; i--) {
+            for (int i = listeners.size() - 1; i >= 0; i--) {
                 listeners.get(i).onStop();
             }
         }

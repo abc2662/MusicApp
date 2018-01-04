@@ -59,6 +59,8 @@ public class PlayMusicActivity extends AppCompatActivity {
             // cast its IBinder to a concrete class and directly access it.
             MusicService.LocalBinder binder = (MusicService.LocalBinder) service;
             mService = binder.getService();
+            mBound = true;
+
             mService.addMusicServiceListener(new MusicService.MusicServiceListener() {
                 @Override
                 public void onPlay(Song song) {
@@ -77,31 +79,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             RefreshUI();
             ArrayList<Song> songList = intent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
             mService.setSongList(songList);
-
-            switch (activityRequest) {
-                case Options.STREAM: {
-                    btnNext.setEnabled(false);
-                    btnPrev.setEnabled(false);
-                    mService.playMusic();
-                    break;
-                }
-                case Options.DEFAULT: {
-                    mService.playMusic();
-                    break;
-                }
-                case Options.RESUME: {
-                    txtTitle.setText(mService.getCurrentSong().getTitle());
-                    txtArtist.setText(mService.getCurrentSong().getArtist());
-                    if (mediaPlayer.isPlaying()) {
-                        btnPlay.setImageResource(R.drawable.pause);
-                        anim_disc.start();
-                    }
-                    UpdateUI();
-                    break;
-                }
-            }
-
-            mBound = true;
+            processRequest();
         }
 
         // Called when the connection with the service disconnects unexpectedly
@@ -126,6 +104,38 @@ public class PlayMusicActivity extends AppCompatActivity {
         // Bind to LocalService
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+        processRequest();
+    }
+
+    private void processRequest() {
+        if (!mBound)
+            return;
+
+        switch (activityRequest) {
+            case Options.STREAM: {
+                btnNext.setEnabled(false);
+                btnPrev.setEnabled(false);
+                mService.playMusic();
+                break;
+            }
+            case Options.DEFAULT: {
+                btnPrev.setEnabled(true);
+                btnNext.setEnabled(true);
+                mService.playMusic();
+                break;
+            }
+            case Options.RESUME: {
+                txtTitle.setText(mService.getCurrentSong().getTitle());
+                txtArtist.setText(mService.getCurrentSong().getArtist());
+                if (mediaPlayer.isPlaying()) {
+                    btnPlay.setImageResource(R.drawable.pause);
+                    anim_disc.start();
+                }
+                UpdateUI();
+                break;
+            }
+        }
     }
 
     public void RefreshUI() {
