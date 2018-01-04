@@ -13,6 +13,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MusicService extends Service {
     MediaPlayer mediaPlayer;
@@ -21,10 +22,15 @@ public class MusicService extends Service {
 
     private ArrayList<Song> songList;
     private int songIndex;
-    private MusicServiceListener musicServiceListener;
-
+    private ArrayList<MusicServiceListener> listeners;
+    private boolean shuffle;
+    private ArrayList<Integer> shuffleIndices;
+    private int repeatOption = 0;
+    
     int getSongIndex() { return songIndex; }
     ArrayList<Song> getSongList() { return songList; }
+    boolean isShuffle() { return shuffle; }
+    int getRepeatOption() { return repeatOption; }
     void setSongIndex(int index) {
         if (index >= songList.size() || index < 0)
             return;
@@ -34,6 +40,33 @@ public class MusicService extends Service {
     void setSongList(ArrayList<Song> list) {
         songList = list;
         setSongIndex(0);
+    }
+    void setShuffle(boolean isShuffle) {
+        shuffle = isShuffle;
+        if (shuffle) {
+            shuffleSongList();
+        }
+    }
+    void setRepeatOption(int index) {
+        if (index > RepeatOptions.Count)
+            index = 0;
+        else if (index < 0)
+            index = RepeatOptions.Count - 1;
+
+        switch (index) {
+            case RepeatOptions.NO_REPEAT: {
+                mediaPlayer.setLooping(false);
+                break;
+            }
+            case RepeatOptions.REPEAT_ALL: {
+                mediaPlayer.setLooping(false);
+                break;
+            }
+            case RepeatOptions.REPEAT_ONE: {
+                mediaPlayer.setLooping(true);
+                break;
+            }
+        }
     }
 
     // Binder given to clients
@@ -51,7 +84,38 @@ public class MusicService extends Service {
         mediaPlayer.reset();
         songList = new ArrayList<>();
         songIndex = 0;
-        musicServiceListener = null;
+        shuffle = false;
+        shuffleIndices = new ArrayList<>();
+        listeners = new ArrayList<>();
+
+        completionListener = new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                switch (repeatOption) {
+                    case RepeatOptions.NO_REPEAT: {
+                        if (!isOnLastSong()) {
+                            playNext();
+                        } else {
+                            stopMusic();
+                        }
+                        break;
+                    }
+                    case RepeatOptions.REPEAT_ALL: {
+                        playNext();
+                        break;
+                    }
+                    case RepeatOptions.REPEAT_ONE: {
+                        break;
+                    }
+                }
+            }
+        };
+        preparedListener = new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mediaPlayer.start();
+            }
+        };
     }
 
     @Override
@@ -75,10 +139,13 @@ public class MusicService extends Service {
     public void playMusic() {
         stopMusic();
 
-        Song song = songList.get(songIndex);
+        Song song = songList.get(findSongIndex());
 
-        if (musicServiceListener != null)
-            musicServiceListener.onPlay(song);
+        if (listeners.size() > 0) {
+            for (int i = listeners.size(); i >= 0; i--) {
+                listeners.get(i).onPlay(song);
+            }
+        }
 
         try {
             /* load the new source */
@@ -96,6 +163,12 @@ public class MusicService extends Service {
     }
 
     public void stopMusic() {
+        if (listeners.size() > 0) {
+            for (int i = listeners.size(); i >= 0; i--) {
+                listeners.get(i).onStop();
+            }
+        }
+
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
@@ -107,7 +180,7 @@ public class MusicService extends Service {
 
     public Song getCurrentSong() {
         if (songList.size() > 0) {
-            return songList.get(songIndex);
+            return songList.get(findSongIndex());
         }
 
         return null;
@@ -139,11 +212,37 @@ public class MusicService extends Service {
         return songIndex == songList.size() - 1;
     }
 
-    public void setMusicServiceListener(MusicServiceListener listener) {
-        musicServiceListener = listener;
+    public void addMusicServiceListener(MusicServiceListener listener) {
+        listeners.add(listener);
     }
 
+    public void shuffleSongList() {
+        if (shuffleIndices != null)
+            shuffleIndices.clear();
+        int size = songList.size();
+        for (int i = 0; i < size; i++)
+            shuffleIndices.add(i);
+        Collections.shuffle(shuffleIndices);
+    }
+    
+    private int findSongIndex() {
+        if (!shuffle)
+            return getSongIndex();
+        else
+            return shuffleIndices.get(getSongIndex());
+    }
+    
     public interface MusicServiceListener {
-        public void onPlay(Song song);
+        void onPlay(Song song);
+        void onStop();
+    }
+
+
+    public static final class RepeatOptions {
+        public static final int NO_REPEAT = 0;
+        public static final int REPEAT_ALL = 1;
+        public static final int REPEAT_ONE = 2;
+
+        public static final int Count = 3;
     }
 }

@@ -48,14 +48,6 @@ public class PlayMusicActivity extends AppCompatActivity {
         public static final int RESUME = 2;
     }
 
-    public static final class RepeatOptions {
-        public static final int NO_REPEAT = 0;
-        public static final int REPEAT_ALL = 1;
-        public static final int REPEAT_ONE = 2;
-
-        public static final int Count = 3;
-    }
-
     public MediaPlayer mediaPlayer;
     boolean mBound;
     MusicService mService;
@@ -67,41 +59,24 @@ public class PlayMusicActivity extends AppCompatActivity {
             // cast its IBinder to a concrete class and directly access it.
             MusicService.LocalBinder binder = (MusicService.LocalBinder) service;
             mService = binder.getService();
-            mediaPlayer = mService.mediaPlayer;
-
-            ArrayList<Song> songList = intent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
-            mService.setSongList(songList);
-
-            mService.preparedListener = new MediaPlayer.OnPreparedListener() {
+            mService.addMusicServiceListener(new MusicService.MusicServiceListener() {
                 @Override
-                public void onPrepared(MediaPlayer player) {
+                public void onPlay(Song song) {
                     UpdateUI();
                     btnPlay.setImageResource(R.drawable.pause);
                     anim_disc.start();
-                    player.start();
                 }
-            };
-            mService.completionListener = new MediaPlayer.OnCompletionListener() {
+
                 @Override
-                public void onCompletion(MediaPlayer mp) {
-                    switch (repeatOption) {
-                        case RepeatOptions.NO_REPEAT: {
-                            if (mService.isOnLastSong()) {
-                                anim_disc.pause();
-                            } else
-                                btnNext.callOnClick();
-                            break;
-                        }
-                        case RepeatOptions.REPEAT_ALL: {
-                            btnNext.callOnClick();
-                            break;
-                        }
-                        case RepeatOptions.REPEAT_ONE: {
-                            break;
-                        }
-                    }
+                public void onStop() {
+                    anim_disc.cancel();
                 }
-            };
+            });
+
+            mediaPlayer = mService.mediaPlayer;
+            RefreshUI();
+            ArrayList<Song> songList = intent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
+            mService.setSongList(songList);
 
             switch (activityRequest) {
                 case Options.STREAM: {
@@ -136,9 +111,6 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
     };
 
-    public ArrayList<Integer> shuffleIndices = new ArrayList<>();
-    public static boolean shuffle = false;
-    public static int repeatOption = 0;
     public int activityRequest;
     public Intent intent;
 
@@ -154,25 +126,24 @@ public class PlayMusicActivity extends AppCompatActivity {
         // Bind to LocalService
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        RefreshUI();
     }
 
     public void RefreshUI() {
         //Restore loop button
-        switch (repeatOption) {
-            case RepeatOptions.REPEAT_ONE:
+        switch (mService.getRepeatOption()) {
+            case MusicService.RepeatOptions.REPEAT_ONE:
                 btnLoop.setImageResource(R.drawable.replay_loop);
                 break;
-            case RepeatOptions.NO_REPEAT:
+            case MusicService.RepeatOptions.NO_REPEAT:
                 btnLoop.setImageResource(R.drawable.replay);
                 break;
-            case RepeatOptions.REPEAT_ALL:
+            case MusicService.RepeatOptions.REPEAT_ALL:
                 btnLoop.setImageResource(R.drawable.replay_selected);
                 break;
         }
 
         //Restore shuffle button
-        if (shuffle) {
+        if (mService.isShuffle()) {
             btnShuffle.setImageResource(R.drawable.shuffle_selected);
         }
     }
@@ -224,42 +195,6 @@ public class PlayMusicActivity extends AppCompatActivity {
         SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
         txtTimeTotal.setText(timeFormat.format(mediaPlayer.getDuration()));
         sbProcess.setMax(mediaPlayer.getDuration());
-    }
-
-    public void shuffleSongList() {
-        if (shuffleIndices != null)
-            shuffleIndices.clear();
-        int size = mService.getSongList().size();
-        for (int i = 0; i < size; i++)
-            shuffleIndices.add(i);
-        Collections.shuffle(shuffleIndices);
-    }
-
-    private int findSongIndex() {
-        if (!shuffle)
-            return mService.getSongIndex();
-        else
-            return shuffleIndices.get(mService.getSongIndex());
-    }
-
-    public void changeRepeatOption(int index) {
-        switch (index) {
-            case RepeatOptions.NO_REPEAT: {
-                btnLoop.setImageResource(R.drawable.replay);
-                mediaPlayer.setLooping(false);
-                break;
-            }
-            case RepeatOptions.REPEAT_ALL: {
-                btnLoop.setImageResource(R.drawable.replay_selected);
-                mediaPlayer.setLooping(false);
-                break;
-            }
-            case RepeatOptions.REPEAT_ONE: {
-                btnLoop.setImageResource(R.drawable.replay_loop);
-                mediaPlayer.setLooping(true);
-                break;
-            }
-        }
     }
 
     private TextView txtTitle, txtTimeProcess, txtTimeTotal, txtArtist;
@@ -353,21 +288,19 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnLoop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                repeatOption = (repeatOption + 1) % RepeatOptions.Count;
-                changeRepeatOption(repeatOption);
+                mService.setRepeatOption(mService.getRepeatOption());
             }
         });
 
         btnShuffle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!shuffle) {
+                if (!mService.isShuffle()) {
+                    mService.setShuffle(true);
                     btnShuffle.setImageResource(R.drawable.shuffle_selected);
-                    shuffle = true;
-                    shuffleSongList();
                 } else {
+                    mService.setShuffle(false);
                     btnShuffle.setImageResource(R.drawable.shuffle);
-                    shuffle = false;
                 }
             }
         });
