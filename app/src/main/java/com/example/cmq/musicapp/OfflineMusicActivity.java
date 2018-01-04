@@ -41,14 +41,14 @@ public class OfflineMusicActivity extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
-        if(PlayMusicActivity.songList==null)
-        {
-            btn_resume.setVisibility(View.GONE);
-        }
-        else
-        {
-            btn_resume.setVisibility(View.VISIBLE);
-        }
+//        if(PlayMusicActivity.songList==null)
+//        {
+//            btn_resume.setVisibility(View.GONE);
+//        }
+//        else
+//        {
+//            btn_resume.setVisibility(View.VISIBLE);
+//        }
     }
 
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 3;
@@ -173,12 +173,12 @@ public class OfflineMusicActivity extends AppCompatActivity {
         btn_resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (PlayMusicActivity.songList == null)
-                    return;
-
-                Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-                resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
-                startActivity(resumeMusicIntent);
+//                if (PlayMusicActivity.songList == null)
+//                    return;
+//
+//                Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
+//                resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
+//                startActivity(resumeMusicIntent);
             }
         });
 

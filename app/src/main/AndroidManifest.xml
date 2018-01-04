@@ -16,13 +16,13 @@
         android:allowBackup="true"
         android:icon="@mipmap/icon_app"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/icon_app"
         android:supportsRtl="true"
-        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".PlayMusicActivity"
-            android:theme="@style/AppTheme2"/>
+            android:theme="@style/AppTheme2" />
         <activity android:name=".OfflineMusicActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,8 +30,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DriveActivity">
-        </activity>
+        <activity android:name=".DriveActivity"></activity>
+
+        <service
+            android:name=".MusicService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

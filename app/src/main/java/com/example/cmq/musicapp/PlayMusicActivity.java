@@ -3,7 +3,10 @@ package com.example.cmq.musicapp;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -11,6 +14,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -52,11 +56,87 @@ public class PlayMusicActivity extends AppCompatActivity {
         public static final int Count = 3;
     }
 
-    static MediaPlayer mediaPlayer = new MediaPlayer();
+    public MediaPlayer mediaPlayer;
+    boolean mBound;
+    MusicService mService;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        // Called when the connection with the service is established
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // Because we have bound to an explicit
+            // service that is running in our own process, we can
+            // cast its IBinder to a concrete class and directly access it.
+            MusicService.LocalBinder binder = (MusicService.LocalBinder) service;
+            mService = binder.getService();
+            mediaPlayer = mService.mediaPlayer;
 
-    public static ArrayList<Song> songList;
-    public static ArrayList<Integer> shuffleIndices = new ArrayList<>();
-    public static int songIndex = 0;
+            ArrayList<Song> songList = intent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
+            mService.setSongList(songList);
+
+            mService.preparedListener = new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer player) {
+                    UpdateUI();
+                    btnPlay.setImageResource(R.drawable.pause);
+                    anim_disc.start();
+                    player.start();
+                }
+            };
+            mService.completionListener = new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    switch (repeatOption) {
+                        case RepeatOptions.NO_REPEAT: {
+                            if (mService.isOnLastSong()) {
+                                anim_disc.pause();
+                            } else
+                                btnNext.callOnClick();
+                            break;
+                        }
+                        case RepeatOptions.REPEAT_ALL: {
+                            btnNext.callOnClick();
+                            break;
+                        }
+                        case RepeatOptions.REPEAT_ONE: {
+                            break;
+                        }
+                    }
+                }
+            };
+
+            switch (activityRequest) {
+                case Options.STREAM: {
+                    btnNext.setEnabled(false);
+                    btnPrev.setEnabled(false);
+                    mService.playMusic();
+                    break;
+                }
+                case Options.DEFAULT: {
+                    mService.playMusic();
+                    break;
+                }
+                case Options.RESUME: {
+                    txtTitle.setText(mService.getCurrentSong().getTitle());
+                    txtArtist.setText(mService.getCurrentSong().getArtist());
+                    if (mediaPlayer.isPlaying()) {
+                        btnPlay.setImageResource(R.drawable.pause);
+                        anim_disc.start();
+                    }
+                    UpdateUI();
+                    break;
+                }
+            }
+
+            mBound = true;
+        }
+
+        // Called when the connection with the service disconnects unexpectedly
+        public void onServiceDisconnected(ComponentName className) {
+            mediaPlayer = null;
+            mBound = false;
+        }
+    };
+
+    public ArrayList<Integer> shuffleIndices = new ArrayList<>();
     public static boolean shuffle = false;
     public static int repeatOption = 0;
     public int activityRequest;
@@ -66,47 +146,15 @@ public class PlayMusicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_music);
-        createMediaPlayer();
         initializeComponents();
-
-        RefreshUI();
 
         intent = getIntent();
         activityRequest = intent.getIntExtra(MESSAGE.ACTIVITY_REQUEST, Options.DEFAULT);
 
-        switch (activityRequest) {
-            case Options.STREAM: {
-                btnNext.setEnabled(false);
-                btnPrev.setEnabled(false);
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                getPlayList();
-                playMusic();
-                break;
-            }
-            case Options.DEFAULT: {
-                getPlayList();
-                playMusic();
-                break;
-            }
-            case Options.RESUME: {
-                txtTitle.setText(songList.get(songIndex).getTitle());
-                if(!songList.get(songIndex).getArtist().equals(""))
-                {
-                    txtArtist.setText(songList.get(songIndex).getArtist());
-                }
-                if (mediaPlayer.isPlaying()) {
-                    btnPlay.setImageResource(R.drawable.pause);
-                    anim_disc.start();
-                }
-                UpdateUI();
-                break;
-            }
-        }
-    }
-
-    private void getPlayList() {
-        songList = intent.getParcelableArrayListExtra(MESSAGE.SONG_LIST);
-        songIndex = intent.getIntExtra(MESSAGE.PLAY_INDEX, 0);
+        // Bind to LocalService
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        RefreshUI();
     }
 
     public void RefreshUI() {
@@ -130,7 +178,10 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     public void UpdateUI() {
-        Song currentSong = songList.get(findSongIndex());
+        Song currentSong = mService.getCurrentSong();
+
+        if (currentSong == null)
+            return;
 
         imgDisc.setImageResource(R.drawable.cd_512);
         imgBlur.setImageResource(R.color.colorBack);
@@ -142,6 +193,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                 imgDisc.setImageDrawable(drawable);
                 Blurry.with(getApplicationContext())
                         .radius(80)
+                        .async()
                         .from(bitmap)
                         .into(imgBlur);
             }
@@ -174,83 +226,20 @@ public class PlayMusicActivity extends AppCompatActivity {
         sbProcess.setMax(mediaPlayer.getDuration());
     }
 
-    private void createMediaPlayer() {
-        if (mediaPlayer != null) {
-            return;
-        }
-
-        mediaPlayer = MediaPlayer.create(PlayMusicActivity.this, Uri.parse(songList.get(songIndex).getLink()));
-    }
-
-    public void playMusic() {
-        stopMusic();
-
-        try {
-                /* load the new source */
-            mediaPlayer.setDataSource(songList.get(findSongIndex()).getLink());
-
-                /* Prepare the mediaPlayer */
-            mediaPlayer.prepareAsync();
-        } catch (IOException e) {
-            Toast.makeText(this, getString(R.string.error_IOException), Toast.LENGTH_LONG).show();
-        } catch (IllegalStateException e) {
-            Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void stopMusic() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
-
-        mediaPlayer.reset();
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer player) {
-                UpdateUI();
-                btnPlay.setImageResource(R.drawable.pause);
-                anim_disc.start();
-                player.start();
-            }
-        });
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                switch (repeatOption) {
-                    case RepeatOptions.NO_REPEAT: {
-                        if (songIndex == songList.size() - 1) {
-                            anim_disc.pause();
-                        } else
-                            btnNext.callOnClick();
-                        break;
-                    }
-                    case RepeatOptions.REPEAT_ALL: {
-                        btnNext.callOnClick();
-                        break;
-                    }
-                    case RepeatOptions.REPEAT_ONE: {
-                        break;
-                    }
-                }
-            }
-        });
-        btnPlay.setImageResource(R.drawable.play);
-        anim_disc.end();
-    }
-
     public void shuffleSongList() {
         if (shuffleIndices != null)
             shuffleIndices.clear();
-        for (int i = 0; i < songList.size(); i++)
+        int size = mService.getSongList().size();
+        for (int i = 0; i < size; i++)
             shuffleIndices.add(i);
         Collections.shuffle(shuffleIndices);
     }
 
     private int findSongIndex() {
         if (!shuffle)
-            return songIndex;
+            return mService.getSongIndex();
         else
-            return shuffleIndices.get(songIndex);
+            return shuffleIndices.get(mService.getSongIndex());
     }
 
     public void changeRepeatOption(int index) {
@@ -323,11 +312,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (++songIndex >= songList.size()) {
-                    songIndex = 0;
-                }
-
-                playMusic();
+                mService.playNext();
             }
         });
 
@@ -337,11 +322,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (--songIndex < 0) {
-                    songIndex = songList.size() - 1;
-                }
-
-                playMusic();
+               mService.playPrevious();
             }
         });
 

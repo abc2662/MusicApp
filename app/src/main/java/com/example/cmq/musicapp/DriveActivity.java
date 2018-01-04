@@ -90,11 +90,11 @@ public class DriveActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (PlayMusicActivity.songList == null) {
-            imgResume.setVisibility(View.GONE);
-        } else {
-            imgResume.setVisibility(View.VISIBLE);
-        }
+//        if (PlayMusicActivity.songList == null) {
+//            imgResume.setVisibility(View.GONE);
+//        } else {
+//            imgResume.setVisibility(View.VISIBLE);
+//        }
     }
 
     private TextView tvUserName;
@@ -329,10 +329,10 @@ public class DriveActivity extends AppCompatActivity {
     }
 
     public void btnResume_Click(View view) {
-        if(PlayMusicActivity.songList ==null)
-            return;
-        Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
-        resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
-        startActivity(resumeMusicIntent);
+//        if(PlayMusicActivity.songList ==null)
+//            return;
+//        Intent resumeMusicIntent = new Intent(getApplicationContext(), PlayMusicActivity.class);
+//        resumeMusicIntent.putExtra(PlayMusicActivity.MESSAGE.ACTIVITY_REQUEST, PlayMusicActivity.Options.RESUME);
+//        startActivity(resumeMusicIntent);
     }
 }
