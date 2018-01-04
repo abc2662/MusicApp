@@ -92,9 +92,9 @@ public class MusicService extends Service {
         completionListener = new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                if (mp.getCurrentPosition() != mp.getDuration())
+                if (mp.getDuration() == 0 || mp.getCurrentPosition() != mp.getDuration()) {
                     return;
-
+                }
                 switch (repeatOption) {
                     case RepeatOptions.NO_REPEAT: {
                         if (!isOnLastSong()) {
