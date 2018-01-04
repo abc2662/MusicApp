@@ -21,6 +21,7 @@ public class MusicService extends Service {
 
     private ArrayList<Song> songList;
     private int songIndex;
+    private MusicServiceListener musicServiceListener;
 
     int getSongIndex() { return songIndex; }
     ArrayList<Song> getSongList() { return songList; }
@@ -50,6 +51,7 @@ public class MusicService extends Service {
         mediaPlayer.reset();
         songList = new ArrayList<>();
         songIndex = 0;
+        musicServiceListener = null;
     }
 
     @Override
@@ -73,9 +75,14 @@ public class MusicService extends Service {
     public void playMusic() {
         stopMusic();
 
+        Song song = songList.get(songIndex);
+
+        if (musicServiceListener != null)
+            musicServiceListener.onPlay(song);
+
         try {
             /* load the new source */
-            mediaPlayer.setDataSource(songList.get(songIndex).getLink());
+            mediaPlayer.setDataSource(song.getLink());
 
             /* Prepare the mediaPlayer */
             mediaPlayer.prepareAsync();
@@ -130,5 +137,13 @@ public class MusicService extends Service {
 
     public boolean isOnLastSong() {
         return songIndex == songList.size() - 1;
+    }
+
+    public void setMusicServiceListener(MusicServiceListener listener) {
+        musicServiceListener = listener;
+    }
+
+    public interface MusicServiceListener {
+        public void onPlay(Song song);
     }
 }
